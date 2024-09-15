@@ -5,6 +5,7 @@ import {
   countryInQuestionAtom,
   CountryProperties,
   isPlayingAtom,
+  playedCountriesAtom,
 } from './components/Map/state';
 import { Alert } from './components/ui/alert';
 import { Button } from './components/ui/button';
@@ -17,14 +18,17 @@ function App() {
   const [currentCountry, setCurrentCountry] = useAtom(countryInQuestionAtom);
   const [message, setMessage] = useState<string>('');
   const [attempts, setAttempts] = useState<number>(0);
-
+  const [playedCountries, setPlayedCountries] = useAtom(playedCountriesAtom);
   const selectRandomCountry = useCallback(() => {
     const countryKeys = Object.keys(countries);
+    const availableCountries = countryKeys.filter(
+      (key) => !playedCountries.includes(key)
+    );
     const randomKey =
-      countryKeys[Math.floor(Math.random() * countryKeys.length)];
+      availableCountries[Math.floor(Math.random() * availableCountries.length)];
     setCurrentCountry(countries[randomKey]);
     setAttempts(0);
-  }, [setCurrentCountry, setAttempts]);
+  }, [setCurrentCountry, setAttempts, playedCountries]);
 
   const moveToCountry = useCallback(() => {
     if (!currentCountry) {
@@ -46,12 +50,18 @@ function App() {
 
   const checkAnswer = useCallback(
     (clickedCountry: string) => {
-      if (clickedCountry === currentCountry?.iso_3166_1) {
+      if (!currentCountry) {
+        console.error('No country selected');
+        return;
+      }
+
+      if (clickedCountry === currentCountry.iso_3166_1) {
         setMessage('Correct!');
         setTimeout(() => {
           setMessage('');
           selectRandomCountry();
           setAttempts(0);
+          setPlayedCountries((prev) => [...prev, currentCountry.iso_3166_1]);
         }, 1000);
       } else {
         setAttempts((prev) => prev + 1);
@@ -59,12 +69,19 @@ function App() {
           setMessage('Moving to the correct country...');
           moveToCountry();
           selectRandomCountry();
+          setPlayedCountries((prev) => [...prev, currentCountry.iso_3166_1]);
         } else {
           setMessage('Try again!');
         }
       }
     },
-    [attempts, currentCountry, moveToCountry, selectRandomCountry]
+    [
+      attempts,
+      currentCountry,
+      moveToCountry,
+      selectRandomCountry,
+      setPlayedCountries,
+    ]
   );
 
   const onClick = useCallback(
