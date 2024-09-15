@@ -1,5 +1,6 @@
 import { useToast } from '@/hooks/use-toast';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { LngLatLike } from 'mapbox-gl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MapContainer } from './components/Map/MapContainer';
 import {
@@ -56,10 +57,14 @@ function App() {
       (c) => c.iso_3166_1 === currentCountry.iso_3166_1
     );
     if (countryData && mapRef.current) {
-      const [minLng, minLat] = countryData.bbox;
+      const [minLng, minLat, maxLng, maxLat] = countryData.bbox;
+      const center = [
+        (minLng + maxLng) / 2,
+        (minLat + maxLat) / 2,
+      ] as LngLatLike;
       mapRef.current.flyTo({
-        center: [minLng, minLat],
-        zoom: mapRef.current.getZoom() + 1,
+        center,
+        zoom: mapRef.current.getZoom() + 5,
         essential: true,
       });
       setTimeout(() => {
