@@ -1,5 +1,6 @@
+import { useToast } from '@/hooks/use-toast';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { MapContainer } from './components/Map/MapContainer';
 import {
   correctCountriesAtom,
@@ -9,16 +10,15 @@ import {
   isPlayingAtom,
   playedCountriesAtom,
 } from './components/Map/state';
-import { Alert } from './components/ui/alert';
 import { Button } from './components/ui/button';
+import { Toaster } from './components/ui/toaster';
 import { countries } from './lib/countries';
-
 function App() {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom);
+  const { toast } = useToast();
 
   const [currentCountry, setCurrentCountry] = useAtom(countryInQuestionAtom);
-  const [message, setMessage] = useState<string>('');
   const [attempts, setAttempts] = useState<number>(0);
   const setCorrectCountries = useSetAtom(correctCountriesAtom);
   const setErrorCountries = useSetAtom(errorCountriesAtom);
@@ -35,6 +35,18 @@ function App() {
     setAttempts(0);
   }, [setCurrentCountry, setAttempts, playedCountries]);
 
+  const resetGame = useCallback(() => {
+    setCorrectCountries([]);
+    setErrorCountries([]);
+    selectRandomCountry();
+  }, [selectRandomCountry, setCorrectCountries, setErrorCountries]);
+
+  useEffect(() => {
+    if (playedCountries.length === 5) {
+      resetGame();
+    }
+  }, [playedCountries, resetGame]);
+
   const moveToCountry = useCallback(() => {
     if (!currentCountry) {
       console.error('No country selected');
@@ -47,9 +59,12 @@ function App() {
       const [minLng, minLat] = countryData.bbox;
       mapRef.current.flyTo({
         center: [minLng, minLat],
-        zoom: 2,
+        zoom: mapRef.current.getZoom() + 1,
         essential: true,
       });
+      setTimeout(() => {
+        mapRef.current?.zoomTo(2);
+      }, 1000);
     }
   }, [currentCountry]);
 
@@ -61,22 +76,32 @@ function App() {
       }
 
       if (clickedCountry === currentCountry.iso_3166_1) {
-        setMessage('Correct!');
+        toast({
+          title: 'Correct!',
+          description: 'You found the country!',
+          variant: 'default',
+        });
         setTimeout(() => {
-          setMessage('');
           selectRandomCountry();
           setAttempts(0);
           setCorrectCountries((prev) => [...prev, currentCountry.iso_3166_1]);
         }, 1000);
       } else {
         setAttempts((prev) => prev + 1);
+        toast({
+          title: 'Incorrect!',
+          description: 'Try again!',
+          variant: 'destructive',
+        });
         if (attempts >= 2) {
-          setMessage('Moving to the correct country...');
+          toast({
+            title: 'Incorrect!',
+            description: 'Moving to the correct country...',
+            variant: 'destructive',
+          });
           moveToCountry();
           setErrorCountries((prev) => [...prev, currentCountry.iso_3166_1]);
           selectRandomCountry();
-        } else {
-          setMessage('Try again!');
         }
       }
     },
@@ -87,6 +112,7 @@ function App() {
       selectRandomCountry,
       setCorrectCountries,
       setErrorCountries,
+      toast,
     ]
   );
 
@@ -108,7 +134,7 @@ function App() {
           <div className='game-question'>
             <h2>Find this country:</h2>
             <p>{currentCountry?.name}</p>
-            {message && <Alert>{message}</Alert>}
+            {/* {message && <Alert variant={'destructive'}>{message}</Alert>} */}
           </div>
         )}
         <Button
@@ -125,6 +151,7 @@ function App() {
         <Button onClick={() => selectRandomCountry()}>Shuffle</Button>
       </div>
       <MapContainer mapRef={mapRef} onClick={onClick} />
+      <Toaster />
     </div>
   );
 }
