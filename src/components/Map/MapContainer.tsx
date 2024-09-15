@@ -59,6 +59,7 @@ export function MapContainer({ mapRef, onClick }: MapContainerProps) {
       const features = event.features;
       if (!features || features.length === 0) {
         setHoveredCountryProperties(null);
+        setHoveredCountryId(null);
         return;
       }
       const featureId = features[0].id as string;
@@ -91,7 +92,7 @@ export function MapContainer({ mapRef, onClick }: MapContainerProps) {
       );
       setHoveredCountryProps(features[0].properties);
     },
-    [setHoveredCountryProperties, setHoveredCountryProps]
+    [setHoveredCountryId, setHoveredCountryProperties, setHoveredCountryProps]
   );
 
   const handleClick = useCallback(

@@ -16,4 +16,9 @@ export const hoveredCountryIdAtom = atom<string | null>(null);
 export const isPlayingAtom = atom<boolean>(false);
 export const countryInQuestionAtom = atom<CountryQuestion | null>(null);
 
-export const playedCountriesAtom = atom<string[]>([]);
+export const correctCountriesAtom = atom<string[]>([]);
+export const errorCountriesAtom = atom<string[]>([]);
+
+export const playedCountriesAtom = atom<string[]>((get) => {
+  return [...get(correctCountriesAtom), ...get(errorCountriesAtom)];
+});

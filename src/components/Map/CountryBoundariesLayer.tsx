@@ -1,10 +1,15 @@
 import { useAtomValue } from 'jotai';
 import { Layer, Source } from 'react-map-gl';
-import { hoveredCountryIdAtom, playedCountriesAtom } from './state';
+import {
+  correctCountriesAtom,
+  errorCountriesAtom,
+  hoveredCountryIdAtom,
+} from './state';
 
 function CountryBoundariesLayer(): JSX.Element {
   const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
-  const playedCountries = useAtomValue(playedCountriesAtom);
+  const playedCountries = useAtomValue(correctCountriesAtom);
+  const errorCountries = useAtomValue(errorCountriesAtom);
   return (
     <Source
       id='country-boundaries'
@@ -18,6 +23,8 @@ function CountryBoundariesLayer(): JSX.Element {
         paint={{
           'fill-color': [
             'case',
+            ['in', ['get', 'iso_3166_1'], ['literal', errorCountries]],
+            '#d90429', // Red color for error countries
             ['in', ['get', 'iso_3166_1'], ['literal', playedCountries]],
             '#2a9d8f', // Green color for played countries
             [

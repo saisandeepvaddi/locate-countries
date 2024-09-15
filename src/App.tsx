@@ -1,9 +1,11 @@
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useRef, useState } from 'react';
 import { MapContainer } from './components/Map/MapContainer';
 import {
+  correctCountriesAtom,
   countryInQuestionAtom,
   CountryProperties,
+  errorCountriesAtom,
   isPlayingAtom,
   playedCountriesAtom,
 } from './components/Map/state';
@@ -18,7 +20,10 @@ function App() {
   const [currentCountry, setCurrentCountry] = useAtom(countryInQuestionAtom);
   const [message, setMessage] = useState<string>('');
   const [attempts, setAttempts] = useState<number>(0);
-  const [playedCountries, setPlayedCountries] = useAtom(playedCountriesAtom);
+  const setCorrectCountries = useSetAtom(correctCountriesAtom);
+  const setErrorCountries = useSetAtom(errorCountriesAtom);
+  const playedCountries = useAtomValue(playedCountriesAtom);
+
   const selectRandomCountry = useCallback(() => {
     const countryKeys = Object.keys(countries);
     const availableCountries = countryKeys.filter(
@@ -61,15 +66,15 @@ function App() {
           setMessage('');
           selectRandomCountry();
           setAttempts(0);
-          setPlayedCountries((prev) => [...prev, currentCountry.iso_3166_1]);
+          setCorrectCountries((prev) => [...prev, currentCountry.iso_3166_1]);
         }, 1000);
       } else {
         setAttempts((prev) => prev + 1);
         if (attempts >= 2) {
           setMessage('Moving to the correct country...');
           moveToCountry();
+          setErrorCountries((prev) => [...prev, currentCountry.iso_3166_1]);
           selectRandomCountry();
-          setPlayedCountries((prev) => [...prev, currentCountry.iso_3166_1]);
         } else {
           setMessage('Try again!');
         }
@@ -80,7 +85,8 @@ function App() {
       currentCountry,
       moveToCountry,
       selectRandomCountry,
-      setPlayedCountries,
+      setCorrectCountries,
+      setErrorCountries,
     ]
   );
 
