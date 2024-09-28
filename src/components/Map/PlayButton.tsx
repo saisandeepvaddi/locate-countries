@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
+import { isPlayingAtom } from '../../state';
 import { Button } from '../ui/button';
-import { isPlayingAtom } from './state';
 
 function PlayButton(): JSX.Element {
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom);

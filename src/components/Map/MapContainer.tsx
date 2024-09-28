@@ -4,14 +4,14 @@ import mapboxgl from 'mapbox-gl';
 import { useCallback, useMemo } from 'react';
 import { Map, MapLib, MapMouseEvent, MapProps } from 'react-map-gl';
 import { MapInstance, MapStyle } from 'react-map-gl/dist/esm/types';
-import CountryBoundariesLayer from './CountryBoundariesLayer';
 import {
   clickedCountryPropsAtom,
   CountryProperties,
   hoveredCountryIdAtom,
   hoveredCountryPropsAtom,
   isPlayingAtom,
-} from './state';
+} from '../../state';
+import CountryBoundariesLayer from './CountryBoundariesLayer';
 
 // import { prepareData } from '@/lib/prepare';
 // window.v = prepareData();

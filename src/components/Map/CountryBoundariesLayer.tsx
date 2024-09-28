@@ -4,7 +4,7 @@ import {
   correctCountriesAtom,
   errorCountriesAtom,
   hoveredCountryIdAtom,
-} from './state';
+} from '../../state';
 
 function CountryBoundariesLayer(): JSX.Element {
   const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
