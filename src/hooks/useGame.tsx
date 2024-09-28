@@ -15,6 +15,7 @@ function useGame() {
   const setErrorCountries = useSetAtom(errorCountriesAtom);
 
   const resetGame = useCallback(() => {
+    setAttempts(0);
     setCorrectCountries([]);
     setErrorCountries([]);
     selectRandomCountry();
@@ -26,6 +27,7 @@ function useGame() {
 
   const toggleGamePlay = () => {
     setIsPlaying(!isPlaying);
+    resetGame();
   };
 
   const startGame = () => {

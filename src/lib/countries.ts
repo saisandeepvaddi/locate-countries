@@ -3520,11 +3520,6 @@ export const countries: Record<string, Country> = {
     'sub-region-code': '061',
     'intermediate-region-code': '',
   },
-  XS: {
-    iso_3166_1: 'XS',
-    bbox: [32.7549, 34.5623, 33.9166, 35.1237],
-    mapbox_id: 'dXJuOm1ieGJuZDoveEQyOnY0',
-  },
   YE: {
     iso_3166_1: 'YE',
     bbox: [41.9037, 12.1081, 54.5343, 18.9996],
@@ -3934,12 +3929,12 @@ export const countries: Record<string, Country> = {
     'alpha-3': 'TWN',
     'country-code': '158',
     'iso_3166-2': 'ISO 3166-2:TW',
-    region: null,
-    'sub-region': null,
-    'intermediate-region': null,
-    'region-code': null,
-    'sub-region-code': null,
-    'intermediate-region-code': null,
+    region: 'Asia',
+    'sub-region': 'Eastern Asia',
+    'intermediate-region': '',
+    'region-code': '142',
+    'sub-region-code': '030',
+    'intermediate-region-code': '',
   },
   UA: {
     iso_3166_1: 'UA',
@@ -3973,11 +3968,7 @@ export const countries: Record<string, Country> = {
     'sub-region-code': '035',
     'intermediate-region-code': '',
   },
-  XK: {
-    iso_3166_1: 'XK',
-    bbox: [20.0143, 41.8576, 21.7899, 43.2677],
-    mapbox_id: 'dXJuOm1ieGJuZDplUkQxOnY0',
-  },
+
   FK: {
     iso_3166_1: 'FK',
     bbox: [-61.4563, -52.9191, -57.7147, -50.9967],

@@ -10,7 +10,6 @@ function CountryBoundariesLayer(): JSX.Element {
   const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
   const playedCountries = useAtomValue(correctCountriesAtom);
   const errorCountries = useAtomValue(errorCountriesAtom);
-  console.log(errorCountries);
   return (
     <Source
       id='country-boundaries'
