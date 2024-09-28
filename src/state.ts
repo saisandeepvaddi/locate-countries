@@ -1,5 +1,6 @@
 import { atom } from 'jotai';
 import { GeoJSONFeature } from 'mapbox-gl';
+import { countries, Country } from './lib/countries';
 
 export type CountryProperties = GeoJSONFeature['properties'];
 
@@ -21,4 +22,28 @@ export const errorCountriesAtom = atom<string[]>([]);
 
 export const playedCountriesAtom = atom<string[]>((get) => {
   return [...get(correctCountriesAtom), ...get(errorCountriesAtom)];
+});
+
+export enum RegionSet {
+  ALL = 'ALL',
+  EUROPE = 'EUROPE',
+  ASIA = 'ASIA',
+  AMERICAS = 'AMERICAS',
+  AFRICA = 'AFRICA',
+  OCEANIA = 'OCEANIA',
+}
+
+export const questionSetAtom = atom<RegionSet>(RegionSet.ALL);
+
+export const availableCountriesBySet = atom<Country[]>((get) => {
+  const set = get(questionSetAtom);
+  const countryObjects = Object.values(countries);
+
+  if (set === RegionSet.ALL) {
+    return countryObjects;
+  }
+
+  return countryObjects.filter((country) => {
+    return country.region.toLowerCase() === set.toLowerCase();
+  });
 });

@@ -11,7 +11,6 @@ function PlayButton(): JSX.Element {
         toggleGamePlay();
       }}
       className='flex gap-2'
-      size={'lg'}
     >
       {isPlaying ? (
         <PauseIcon className='w-4 h-4' />

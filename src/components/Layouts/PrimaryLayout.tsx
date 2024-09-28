@@ -10,7 +10,7 @@ import {
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { LngLatLike } from 'mapbox-gl';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import GameStateTopBanner from '../Game/GameStateTopBanner';
+import { GameStateTopBanner } from '../Game/GameStateTopBanner';
 import { MapContainer } from '../Map/MapContainer';
 
 function PrimaryLayout(): JSX.Element {

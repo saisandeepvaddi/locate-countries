@@ -1,3 +1,4 @@
+export type Region = 'Europe' | 'Asia' | 'Americas' | 'Africa' | 'Oceania';
 export type Country = {
   iso_3166_1: string;
   bbox: [number, number, number, number];
@@ -7,7 +8,7 @@ export type Country = {
   'alpha-3': string;
   'country-code': string;
   'iso_3166-2': string;
-  region: string;
+  region: Region | 'Antarctica';
   'sub-region': string;
   'intermediate-region': string;
   'region-code': string;
@@ -153,7 +154,7 @@ export const countries: Record<string, Country> = {
     'alpha-3': 'ATA',
     'country-code': '010',
     'iso_3166-2': 'ISO 3166-2:AQ',
-    region: '',
+    region: 'Antarctica', // Special case. There is no region for Antarctica.
     'sub-region': '',
     'intermediate-region': '',
     'region-code': '',

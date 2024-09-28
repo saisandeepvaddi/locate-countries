@@ -65,11 +65,11 @@
   }
 
   .v-center {
-    @apply flex items-center justify-center;
+    @apply flex items-center;
   }
 
   .h-center {
-    @apply flex items-center justify-center;
+    @apply flex justify-center;
   }
 
   .center {

@@ -3,7 +3,9 @@ import useGame from '@/hooks/useGame';
 function Question(): JSX.Element {
   const { questionLocation } = useGame();
   return (
-    <p className='text-2xl font-bold text-blue-800'>{questionLocation?.name}</p>
+    <span className='text-2xl font-bold text-white'>
+      {questionLocation?.name}
+    </span>
   );
 }
 
