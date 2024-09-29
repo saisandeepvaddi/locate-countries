@@ -1,4 +1,5 @@
 import useGame from '@/hooks/useGame';
+import { ThemeSelect } from '../ThemeSelect';
 import PlayButton from './PlayButton';
 import Question from './Question';
 import QuestionSetSelect from './QuestionSetSelect';
@@ -15,7 +16,8 @@ export function GameStateTopBanner(): JSX.Element {
         </div>
         <div className='flex-1 h-center'>{isPlaying && <Question />}</div>
         {/* Keep it to balance center */}
-        <div className='flex-1' />
+        {/* <div className='flex-1' /> */}
+        <ThemeSelect />
       </div>
     </div>
   );

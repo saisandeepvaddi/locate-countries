@@ -4,12 +4,14 @@ import {
   correctCountriesAtom,
   errorCountriesAtom,
   hoveredCountryIdAtom,
+  layerThemeAtom,
 } from '../../state';
 
 function CountryBoundariesLayer(): JSX.Element {
   const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
   const playedCountries = useAtomValue(correctCountriesAtom);
   const errorCountries = useAtomValue(errorCountriesAtom);
+  const layerTheme = useAtomValue(layerThemeAtom);
   return (
     <Source
       id='country-boundaries'
@@ -24,18 +26,18 @@ function CountryBoundariesLayer(): JSX.Element {
           'fill-color': [
             'case',
             ['in', ['get', 'iso_3166_1'], ['literal', errorCountries]],
-            '#d90429', // Red color for error countries
+            layerTheme.error, // Red color for error countries
             ['in', ['get', 'iso_3166_1'], ['literal', playedCountries]],
-            '#2a9d8f', // Green color for correct countries
+            layerTheme.correct, // Green color for correct countries
             [
               'boolean',
               ['==', ['get', 'iso_3166_1'], hoveredCountryId ?? null],
               0,
             ],
-            '#212529', // Hovered country color
-            '#CCCCCC', // Default color
+            layerTheme.hovered, // Hovered country color
+            layerTheme.default, // Default color
           ],
-          'fill-outline-color': '#000000',
+          'fill-outline-color': layerTheme.border,
         }}
       />
     </Source>
