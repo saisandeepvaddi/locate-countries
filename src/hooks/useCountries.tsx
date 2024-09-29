@@ -8,7 +8,9 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 
 function useCountries() {
-  const [currentCountry, setCurrentCountry] = useAtom(countryInQuestionAtom);
+  const [questionLocation, setQuestionLocation] = useAtom(
+    countryInQuestionAtom
+  );
 
   const playedCountries = useAtomValue(playedCountriesAtom);
   const countrySet = useAtomValue(availableCountriesBySet);
@@ -19,12 +21,12 @@ function useCountries() {
     );
     const randomCountry =
       availableCountries[Math.floor(Math.random() * availableCountries.length)];
-    setCurrentCountry(randomCountry);
-  }, [countrySet, setCurrentCountry, playedCountries]);
+    setQuestionLocation(randomCountry);
+  }, [countrySet, setQuestionLocation, playedCountries]);
 
   return {
     selectRandomCountry,
-    currentCountry,
+    questionLocation,
     countrySet,
     countries,
   };

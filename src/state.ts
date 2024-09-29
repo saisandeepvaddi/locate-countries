@@ -15,6 +15,7 @@ export const clickedCountryPropsAtom = atom<CountryProperties | null>(null);
 export const hoveredCountryIdAtom = atom<string | null>(null);
 
 export const isPlayingAtom = atom<boolean>(false);
+export const attemptsAtom = atom<number>(0);
 export const countryInQuestionAtom = atom<CountryQuestion | null>(null);
 
 export const correctCountriesAtom = atom<string[]>([]);

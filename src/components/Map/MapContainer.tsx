@@ -1,9 +1,14 @@
 'use client';
+import useGame from '@/hooks/useGame';
 import { useAtomValue, useSetAtom } from 'jotai';
-import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback } from 'react';
-import { Map, MapLib, MapMouseEvent } from 'react-map-gl';
+import {
+  Map,
+  MapMouseEvent,
+  NavigationControl,
+  ScaleControl,
+} from 'react-map-gl';
 import {
   clickedCountryPropsAtom,
   CountryProperties,
@@ -17,15 +22,12 @@ import PlayedCountryMarkers from './PlayedCountryMarkers';
 // import { prepareData } from '@/lib/prepare';
 // window.v = prepareData();
 
-export interface MapContainerProps {
-  mapRef: React.RefObject<mapboxgl.Map>;
-  onClick: (event: CountryProperties) => void;
-}
-export function MapContainer({ mapRef, onClick }: MapContainerProps) {
+export function MapContainer() {
   const isPlaying = useAtomValue(isPlayingAtom);
   const setHoveredCountryProperties = useSetAtom(hoveredCountryPropsAtom);
   const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
   const setHoveredCountryId = useSetAtom(hoveredCountryIdAtom);
+  const { onCountryClick, setMapRef } = useGame();
 
   const setHoveredCountryProps = useCallback(
     (hoveredCountryProps: CountryProperties) => {
@@ -87,9 +89,9 @@ export function MapContainer({ mapRef, onClick }: MapContainerProps) {
       // console.log(event.features[0].properties);
 
       setClickedCountryProperties(event.features[0].properties);
-      onClick(event.features[0].properties);
+      onCountryClick(event.features[0].properties);
     },
-    [setClickedCountryProperties, onClick]
+    [setClickedCountryProperties, onCountryClick]
   );
 
   const onMouseLeave = useCallback(
@@ -103,10 +105,9 @@ export function MapContainer({ mapRef, onClick }: MapContainerProps) {
 
   return (
     <Map
-      //@ts-expect-error not good types from mapboxgl to react-map-gl
-      ref={mapRef}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mapLib={mapboxgl as unknown as MapLib<any>}
+      id='map'
+      ref={setMapRef}
+      // mapLib={mapboxgl as unknown as MapLib<any>}
       initialViewState={{
         latitude: 0,
         longitude: 20,
@@ -115,15 +116,15 @@ export function MapContainer({ mapRef, onClick }: MapContainerProps) {
         pitch: 0,
       }}
       style={{ width: '100vw', height: '100vh' }}
-      // mapStyle={mapStyle}
       mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
-      // {...mapProps}
       reuseMaps
       interactiveLayerIds={isPlaying ? ['country-boundaries'] : []}
       onMouseMove={onHover}
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
     >
+      <ScaleControl />
+      <NavigationControl position='bottom-right' />
       <PlayedCountryMarkers />
       <CountryBoundariesLayer />
     </Map>
