@@ -62,12 +62,12 @@ function PrimaryLayout(): JSX.Element {
       ] as LngLatLike;
       mapRef.current.flyTo({
         center,
-        zoom: mapRef.current.getZoom() + 5,
+        zoom: mapRef.current.getZoom(),
         essential: true,
       });
-      setTimeout(() => {
-        mapRef.current?.zoomTo(2);
-      }, 1000);
+      // setTimeout(() => {
+      //   mapRef.current?.zoomTo(2);
+      // }, 1000);
     }
   }, [currentCountry]);
 

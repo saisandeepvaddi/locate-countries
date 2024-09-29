@@ -27,7 +27,9 @@ function useGame() {
 
   const toggleGamePlay = () => {
     setIsPlaying(!isPlaying);
-    resetGame();
+    if (!isPlaying) {
+      resetGame();
+    }
   };
 
   const startGame = () => {

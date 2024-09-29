@@ -1,3 +1,4 @@
+import { countries } from '@/lib/countries';
 import {
   availableCountriesBySet,
   countryInQuestionAtom,
@@ -25,6 +26,7 @@ function useCountries() {
     selectRandomCountry,
     currentCountry,
     countrySet,
+    countries,
   };
 }
 

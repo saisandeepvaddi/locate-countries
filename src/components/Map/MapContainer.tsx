@@ -1,9 +1,9 @@
 'use client';
 import { useAtomValue, useSetAtom } from 'jotai';
 import mapboxgl from 'mapbox-gl';
-import { useCallback, useMemo } from 'react';
-import { Map, MapLib, MapMouseEvent, MapProps } from 'react-map-gl';
-import { MapInstance, MapStyle } from 'react-map-gl/dist/esm/types';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import { useCallback } from 'react';
+import { Map, MapLib, MapMouseEvent } from 'react-map-gl';
 import {
   clickedCountryPropsAtom,
   CountryProperties,
@@ -12,6 +12,7 @@ import {
   isPlayingAtom,
 } from '../../state';
 import CountryBoundariesLayer from './CountryBoundariesLayer';
+import PlayedCountryMarkers from './PlayedCountryMarkers';
 
 // import { prepareData } from '@/lib/prepare';
 // window.v = prepareData();
@@ -25,25 +26,6 @@ export function MapContainer({ mapRef, onClick }: MapContainerProps) {
   const setHoveredCountryProperties = useSetAtom(hoveredCountryPropsAtom);
   const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
   const setHoveredCountryId = useSetAtom(hoveredCountryIdAtom);
-  const mapProps: MapProps = useMemo(() => {
-    const mapStyle: MapStyle = {
-      version: 8,
-      sources: {},
-      layers: [],
-    };
-    const props: MapProps = {
-      mapLib: mapboxgl as unknown as MapLib<MapInstance>,
-      initialViewState: {
-        longitude: 0,
-        latitude: 20,
-        zoom: 2,
-      },
-      style: { width: '100vw', height: '100vh' },
-      mapStyle,
-      mapboxAccessToken: import.meta.env.VITE_MAPBOX_TOKEN,
-    } as unknown as MapProps;
-    return props;
-  }, []);
 
   const setHoveredCountryProps = useCallback(
     (hoveredCountryProps: CountryProperties) => {
@@ -123,13 +105,26 @@ export function MapContainer({ mapRef, onClick }: MapContainerProps) {
     <Map
       //@ts-expect-error not good types from mapboxgl to react-map-gl
       ref={mapRef}
-      {...mapProps}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mapLib={mapboxgl as unknown as MapLib<any>}
+      initialViewState={{
+        latitude: 0,
+        longitude: 20,
+        zoom: 2,
+        bearing: 0,
+        pitch: 0,
+      }}
+      style={{ width: '100vw', height: '100vh' }}
+      // mapStyle={mapStyle}
+      mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
+      // {...mapProps}
       reuseMaps
       interactiveLayerIds={isPlaying ? ['country-boundaries'] : []}
       onMouseMove={onHover}
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
     >
+      <PlayedCountryMarkers />
       <CountryBoundariesLayer />
     </Map>
   );

@@ -26,7 +26,7 @@ function CountryBoundariesLayer(): JSX.Element {
             ['in', ['get', 'iso_3166_1'], ['literal', errorCountries]],
             '#d90429', // Red color for error countries
             ['in', ['get', 'iso_3166_1'], ['literal', playedCountries]],
-            '#2a9d8f', // Green color for played countries
+            '#2a9d8f', // Green color for correct countries
             [
               'boolean',
               ['==', ['get', 'iso_3166_1'], hoveredCountryId ?? null],
