@@ -17,17 +17,17 @@ const defaultLayerTheme: LayerTheme = {
 const nightLayerTheme: LayerTheme = {
   error: '#d90429',
   correct: '#2a9d8f',
-  hovered: '#212529',
+  hovered: '#BFA18F',
   default: '#000000',
-  border: '#FFFFFF',
+  border: '#ffffff',
 };
 
 const dayLayerTheme: LayerTheme = {
   error: '#d90429',
-  correct: '#2a9d8f',
-  hovered: '#212529',
-  default: '#CCCCCC',
-  border: '#000000',
+  correct: '#734124',
+  hovered: '#BFA18F',
+  default: '#F2F2F0',
+  border: '#734124',
 };
 
 export enum AvailableThemes {

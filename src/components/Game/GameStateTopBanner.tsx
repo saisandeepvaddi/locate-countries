@@ -14,9 +14,7 @@ export function GameStateTopBanner(): JSX.Element {
           <QuestionSetSelect />
           <PlayButton />
         </div>
-        <div className='flex-1 h-center'>{isPlaying && <Question />}</div>
-        {/* Keep it to balance center */}
-        {/* <div className='flex-1' /> */}
+        <div className='flex-1'>{isPlaying && <Question />}</div>
         <ThemeSelect />
       </div>
     </div>
