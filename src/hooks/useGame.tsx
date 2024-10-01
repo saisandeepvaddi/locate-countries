@@ -15,7 +15,13 @@ import useCountries from './useCountries';
 function useGame() {
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom);
   const [attempts, setAttempts] = useAtom(attemptsAtom);
-  const { selectRandomCountry, questionLocation, countries } = useCountries();
+  const {
+    selectRandomCountry,
+    questionLocation,
+    countries,
+    playedCountries,
+    countrySet,
+  } = useCountries();
   const setCorrectCountries = useSetAtom(correctCountriesAtom);
   const setErrorCountries = useSetAtom(errorCountriesAtom);
   const mapRef = useRef<MapRef>(null);
@@ -158,6 +164,8 @@ function useGame() {
     shuffleQuestion,
     setMapRef,
     onCountryClick,
+    playedLocations: playedCountries,
+    availableLocations: countrySet,
   };
 }
 

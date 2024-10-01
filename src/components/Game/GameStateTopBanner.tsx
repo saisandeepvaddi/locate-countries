@@ -14,6 +14,7 @@ export function GameStateTopBanner() {
           <QuestionSetSelect />
           <PlayButton />
         </div>
+
         <div className='flex-1'>{isPlaying && <Question />}</div>
         <ThemeSelect />
       </div>

@@ -29,6 +29,7 @@ function useCountries() {
     questionLocation,
     countrySet,
     countries,
+    playedCountries,
   };
 }
 
