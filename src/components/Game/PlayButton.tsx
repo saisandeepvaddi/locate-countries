@@ -2,7 +2,7 @@ import useGame from '@/hooks/useGame';
 import { PauseIcon, PlayIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 
-function PlayButton(): JSX.Element {
+function PlayButton() {
   const { isPlaying, toggleGamePlay } = useGame();
 
   return (

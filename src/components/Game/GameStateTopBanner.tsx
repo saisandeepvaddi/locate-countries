@@ -4,7 +4,7 @@ import PlayButton from './PlayButton';
 import Question from './Question';
 import QuestionSetSelect from './QuestionSetSelect';
 
-export function GameStateTopBanner(): JSX.Element {
+export function GameStateTopBanner() {
   const { isPlaying } = useGame();
 
   return (

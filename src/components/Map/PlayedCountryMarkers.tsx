@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
 import { Marker, Popup } from 'react-map-gl';
 
-function PlayedCountryMarkers(): JSX.Element {
+function PlayedCountryMarkers() {
   const playedCountries = useAtomValue(correctCountriesAtom);
   const errorCountries = useAtomValue(errorCountriesAtom);
   const { countries } = useCountries();

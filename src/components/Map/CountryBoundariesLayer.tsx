@@ -7,7 +7,7 @@ import {
   layerThemeAtom,
 } from '../../state';
 
-function CountryBoundariesLayer(): JSX.Element {
+function CountryBoundariesLayer() {
   const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
   const playedCountries = useAtomValue(correctCountriesAtom);
   const errorCountries = useAtomValue(errorCountriesAtom);

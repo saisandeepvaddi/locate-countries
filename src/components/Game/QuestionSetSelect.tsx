@@ -10,7 +10,7 @@ import { questionSetAtom, RegionSet } from '@/state';
 
 import { useAtom } from 'jotai';
 
-function QuestionSetSelect(): JSX.Element {
+function QuestionSetSelect() {
   const regions = Object.values(RegionSet);
   const { resetGame } = useGame();
   const [questionSet, setQuestionSet] = useAtom(questionSetAtom);
