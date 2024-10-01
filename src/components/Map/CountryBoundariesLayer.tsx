@@ -19,6 +19,13 @@ function CountryBoundariesLayer() {
       url='mapbox://mapbox.country-boundaries-v1'
     >
       <Layer
+        id='background'
+        type='background'
+        paint={{
+          'background-color': layerTheme.ocean,
+        }}
+      />
+      <Layer
         id='country-boundaries'
         type='fill'
         source-layer='country_boundaries'
