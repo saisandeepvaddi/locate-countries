@@ -37,9 +37,16 @@ function PlayedCountryMarkers() {
             setPopupInfo(country);
           }}
         >
-          <span className='absolute top-0 left-0 text-xs font-bold bg-slate-900 text-white px-2 py-1 rounded-lg'>
-            {country.iso_3166_1}
-          </span>
+          <div className='flex items-center gap-2 p-2 bg-white/50 rounded-lg'>
+            <img
+              alt={country.name}
+              src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${country.iso_3166_1}.svg`}
+              className='h-[20px] w-[30px] border-white border-1 rounded-sm'
+            />
+            <span className='text-xs font-bold bg-black text-white px-2 py-1 rounded-lg'>
+              {country.iso_3166_1}
+            </span>
+          </div>
         </Marker>
       );
     });
@@ -53,10 +60,28 @@ function PlayedCountryMarkers() {
           latitude={getCoords(popupInfo).latitude}
           longitude={getCoords(popupInfo).longitude}
           onClose={() => setPopupInfo(null)}
+          className='p-2 rounded-lg'
         >
-          <p>{popupInfo.name}</p>
-          <p>{popupInfo.iso_3166_1}</p>
-          <p>{popupInfo.region}</p>
+          <p className='text-lg flex gap-1 items-center'>
+            <img
+              alt={popupInfo.name}
+              src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${popupInfo.iso_3166_1}.svg`}
+              className='h-[20px] w-[30px] border-white border-1 rounded-sm'
+            />
+            <span className='font-bold'>{popupInfo.name}</span>
+            <span className='text-sm text-slate-400'>
+              ({popupInfo.iso_3166_1})
+            </span>
+          </p>
+          <p className='mt-2'>
+            <a
+              href={`https://simple.wikipedia.org/wiki/${popupInfo.name}`}
+              target='_blank'
+              className='text-sm text-blue-600 underline'
+            >
+              Wikipedia
+            </a>
+          </p>
         </Popup>
       )}
     </>
