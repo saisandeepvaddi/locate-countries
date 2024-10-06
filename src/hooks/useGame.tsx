@@ -106,9 +106,17 @@ function useGame() {
           variant: 'default',
         });
         setTimeout(() => {
-          selectRandomCountry();
-          setAttempts(0);
-          setCorrectCountries((prev) => [...prev, questionLocation.iso_3166_1]);
+          setCorrectCountries((prev) => {
+            const updatedCorrectCountries = [
+              ...prev,
+              questionLocation.iso_3166_1,
+            ];
+            setTimeout(() => {
+              selectRandomCountry();
+              setAttempts(0);
+            }, 0);
+            return updatedCorrectCountries;
+          });
         }, 1000);
       } else {
         setAttempts((prev) => prev + 1);
@@ -124,9 +132,17 @@ function useGame() {
             variant: 'destructive',
           });
           moveToCountry();
-          setErrorCountries((prev) => [...prev, questionLocation.iso_3166_1]);
-          selectRandomCountry();
-          setAttempts(0);
+          setErrorCountries((prev) => {
+            const updatedErrorCountries = [
+              ...prev,
+              questionLocation.iso_3166_1,
+            ];
+            setTimeout(() => {
+              selectRandomCountry();
+              setAttempts(0);
+            }, 0);
+            return updatedErrorCountries;
+          });
         }
       }
     },
