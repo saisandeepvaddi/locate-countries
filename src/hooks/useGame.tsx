@@ -4,10 +4,11 @@ import {
   CountryProperties,
   errorCountriesAtom,
   isPlayingAtom,
+  maxAttemptsAtom,
 } from '@/state';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { LngLatLike } from 'mapbox-gl';
-import { MutableRefObject, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { MapRef } from 'react-map-gl';
 import { toast } from './use-toast';
 import useCountries from './useCountries';
@@ -15,6 +16,7 @@ import useCountries from './useCountries';
 function useGame() {
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom);
   const [attempts, setAttempts] = useAtom(attemptsAtom);
+  const maxAttempts = useAtomValue(maxAttemptsAtom);
   const {
     selectRandomCountry,
     questionLocation,
@@ -27,7 +29,7 @@ function useGame() {
   const mapRef = useRef<MapRef>(null);
 
   const setMapRef = useCallback((ref: MapRef) => {
-    (mapRef as MutableRefObject<MapRef>).current = ref;
+    mapRef.current = ref;
   }, []);
 
   const resetGame = useCallback(() => {
@@ -119,13 +121,14 @@ function useGame() {
           });
         }, 1000);
       } else {
-        setAttempts((prev) => prev + 1);
+        const nextAttempts = attempts + 1;
+        setAttempts(nextAttempts);
         toast({
           title: 'Incorrect!',
           description: 'Try again!',
           variant: 'destructive',
         });
-        if (attempts >= 2) {
+        if (nextAttempts >= maxAttempts) {
           toast({
             title: 'Incorrect!',
             description: 'Moving to the correct country...',

@@ -19,6 +19,7 @@ export const hoveredCountryIdAtom = atom<string | null>(null);
 
 export const isPlayingAtom = atom<boolean>(false);
 export const attemptsAtom = atom<number>(0);
+export const maxAttemptsAtom = atom<number>(1);
 
 export const countryInQuestionAtom = atom<CountryQuestion | null>(null);
 

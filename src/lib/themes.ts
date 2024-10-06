@@ -26,7 +26,7 @@ const nightLayerTheme: LayerTheme = {
 };
 
 const dayLayerTheme: LayerTheme = {
-  error: '#d90429',
+  error: '#FB5012',
   correct: '#734124',
   hovered: '#BFA18F',
   default: '#F2F2F0',
