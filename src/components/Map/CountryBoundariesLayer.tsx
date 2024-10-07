@@ -5,13 +5,16 @@ import {
   errorCountriesAtom,
   hoveredCountryIdAtom,
   layerThemeAtom,
+  playedCountriesAtom,
 } from '../../state';
 
 function CountryBoundariesLayer() {
   const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
-  const playedCountries = useAtomValue(correctCountriesAtom);
+  const correctCountries = useAtomValue(correctCountriesAtom);
   const errorCountries = useAtomValue(errorCountriesAtom);
+  const playedCountries = useAtomValue(playedCountriesAtom);
   const layerTheme = useAtomValue(layerThemeAtom);
+  const lastPlayedCountry = playedCountries[playedCountries.length - 1];
   return (
     <Source
       id='country-boundaries'
@@ -34,7 +37,7 @@ function CountryBoundariesLayer() {
             'case',
             ['in', ['get', 'iso_3166_1'], ['literal', errorCountries]],
             layerTheme.error, // Red color for error countries
-            ['in', ['get', 'iso_3166_1'], ['literal', playedCountries]],
+            ['in', ['get', 'iso_3166_1'], ['literal', correctCountries]],
             layerTheme.correct, // Green color for correct countries
             [
               'boolean',
@@ -45,6 +48,14 @@ function CountryBoundariesLayer() {
             layerTheme.default, // Default color
           ],
           'fill-outline-color': layerTheme.border,
+          'fill-opacity': [
+            'case',
+            ['==', ['get', 'iso_3166_1'], lastPlayedCountry],
+            0.9,
+            ['in', ['get', 'iso_3166_1'], ['literal', playedCountries]],
+            0.25,
+            1,
+          ],
         }}
       />
     </Source>

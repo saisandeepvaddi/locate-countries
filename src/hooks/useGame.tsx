@@ -107,19 +107,18 @@ function useGame() {
           description: 'You found the country!',
           variant: 'default',
         });
-        setTimeout(() => {
-          setCorrectCountries((prev) => {
-            const updatedCorrectCountries = [
-              ...prev,
-              questionLocation.iso_3166_1,
-            ];
-            setTimeout(() => {
-              selectRandomCountry();
-              setAttempts(0);
-            }, 0);
-            return updatedCorrectCountries;
-          });
-        }, 1000);
+
+        setCorrectCountries((prev) => {
+          const updatedCorrectCountries = [
+            ...prev,
+            questionLocation.iso_3166_1,
+          ];
+          setTimeout(() => {
+            selectRandomCountry();
+            setAttempts(0);
+          }, 0);
+          return updatedCorrectCountries;
+        });
       } else {
         const nextAttempts = attempts + 1;
         setAttempts(nextAttempts);
