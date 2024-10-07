@@ -7,14 +7,14 @@ export interface LayerTheme {
   ocean: string;
 }
 
-const defaultLayerTheme: LayerTheme = {
-  error: '#d90429',
-  correct: '#2a9d8f',
-  hovered: '#212529',
-  default: '#faf9f9',
-  border: '#1f1f1f',
-  ocean: '#D8EBF2',
-};
+// const defaultLayerTheme: LayerTheme = {
+//   error: '#d90429',
+//   correct: '#2a9d8f',
+//   hovered: '#212529',
+//   default: '#faf9f9',
+//   border: '#1f1f1f',
+//   ocean: '#D8EBF2',
+// };
 
 const nightLayerTheme: LayerTheme = {
   error: '#d90429',
@@ -35,13 +35,13 @@ const dayLayerTheme: LayerTheme = {
 };
 
 export enum AvailableThemes {
-  DEFAULT = 'default',
+  // DEFAULT = 'default',
   NIGHT = 'night',
   DAY = 'day',
 }
 
 export const layerThemes: Record<AvailableThemes, LayerTheme> = {
-  [AvailableThemes.DEFAULT]: defaultLayerTheme,
+  // [AvailableThemes.DEFAULT]: defaultLayerTheme,
   [AvailableThemes.NIGHT]: nightLayerTheme,
   [AvailableThemes.DAY]: dayLayerTheme,
 };

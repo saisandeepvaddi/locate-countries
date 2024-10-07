@@ -11,8 +11,11 @@ import { AvailableThemes, layerThemes } from '../lib/themes';
 import { layerThemeAtom } from '../state';
 
 export function ThemeSelect() {
+  const prefersDarkMode = window.matchMedia(
+    '(prefers-color-scheme: dark)'
+  ).matches;
   const [selectedTheme, setSelectedTheme] = useState<AvailableThemes>(
-    AvailableThemes.DEFAULT
+    prefersDarkMode ? AvailableThemes.NIGHT : AvailableThemes.DAY
   );
   const setTheme = useSetAtom(layerThemeAtom);
   return (
