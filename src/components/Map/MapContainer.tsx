@@ -15,6 +15,7 @@ import {
   hoveredCountryIdAtom,
   hoveredCountryPropsAtom,
   isPlayingAtom,
+  playedCountriesAtom,
 } from '../../state';
 import CountryBoundariesLayer from './CountryBoundariesLayer';
 import PlayedCountryMarkers from './PlayedCountryMarkers';
@@ -28,6 +29,8 @@ export function MapContainer() {
   const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
   const setHoveredCountryId = useSetAtom(hoveredCountryIdAtom);
   const { onCountryClick, setMapRef } = useGame();
+  const { setLastClickedCountry } = useGame();
+  const playedCountries = useAtomValue(playedCountriesAtom);
 
   const setHoveredCountryProps = useCallback(
     (hoveredCountryProps: CountryProperties) => {
@@ -86,12 +89,17 @@ export function MapContainer() {
         return;
       }
 
-      // console.log(event.features[0].properties);
-
+      const clickedCountryIso = event.features[0].properties?.iso_3166_1;
+      if (!clickedCountryIso) {
+        return;
+      }
       setClickedCountryProperties(event.features[0].properties);
-      onCountryClick(event.features[0].properties);
+      if (!playedCountries.includes(clickedCountryIso)) {
+        onCountryClick(event.features[0].properties);
+      }
+      setLastClickedCountry(event.features[0].properties?.iso_3166_1 ?? null);
     },
-    [setClickedCountryProperties, onCountryClick]
+    [setClickedCountryProperties, onCountryClick, playedCountries]
   );
 
   const onMouseLeave = useCallback(
@@ -125,7 +133,7 @@ export function MapContainer() {
     >
       <ScaleControl />
       <NavigationControl position='bottom-right' />
-      <PlayedCountryMarkers />
+      <PlayedCountryMarkers countryISOs={playedCountries} />
       <CountryBoundariesLayer />
     </Map>
   );

@@ -1,14 +1,20 @@
 import useCountries from '@/hooks/useCountries';
+import useGame from '@/hooks/useGame';
 import { Country } from '@/lib/countries';
-import { correctCountriesAtom, errorCountriesAtom } from '@/state';
+import { showMarkerOnlyOnClickAtom } from '@/state';
 import { useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
 import { Marker, Popup } from 'react-map-gl';
 
-function PlayedCountryMarkers() {
-  const playedCountries = useAtomValue(correctCountriesAtom);
-  const errorCountries = useAtomValue(errorCountriesAtom);
-  const { countries } = useCountries();
+interface PlayedCountryMarkersProps {
+  countryISOs: string[];
+}
+
+function PlayedCountryMarkers({ countryISOs = [] }: PlayedCountryMarkersProps) {
+  // const playedCountries = useAtomValue(playedCountriesAtom);
+  const { countries, getCountryByIso } = useCountries();
+  const { lastClickedCountry } = useGame();
+  const showMarkerOnlyOnClick = useAtomValue(showMarkerOnlyOnClickAtom);
   const [popupInfo, setPopupInfo] = useState<Country | null>(null);
 
   const getCoords = (country: Country) => {
@@ -18,10 +24,8 @@ function PlayedCountryMarkers() {
   };
 
   const markers = useMemo(() => {
-    const pinCountries = [...playedCountries, ...errorCountries];
-
-    return pinCountries.map((countryIso) => {
-      const country = countries[countryIso];
+    return countryISOs.map((countryIso) => {
+      const country = getCountryByIso(countryIso);
       if (!country) {
         return null;
       }
@@ -50,7 +54,7 @@ function PlayedCountryMarkers() {
         </Marker>
       );
     });
-  }, [countries, playedCountries, errorCountries]);
+  }, [countries, countryISOs]);
 
   return (
     <>

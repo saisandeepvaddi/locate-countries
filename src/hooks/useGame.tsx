@@ -8,7 +8,7 @@ import {
 } from '@/state';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { LngLatLike } from 'mapbox-gl';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { MapRef } from 'react-map-gl';
 import { toast } from './use-toast';
 import useCountries from './useCountries';
@@ -27,7 +27,9 @@ function useGame() {
   const setCorrectCountries = useSetAtom(correctCountriesAtom);
   const setErrorCountries = useSetAtom(errorCountriesAtom);
   const mapRef = useRef<MapRef>(null);
-
+  const [lastClickedCountry, setLastClickedCountry] = useState<string | null>(
+    null
+  );
   const setMapRef = useCallback((ref: MapRef) => {
     mapRef.current = ref;
   }, []);
@@ -165,6 +167,7 @@ function useGame() {
         console.error('No country props');
         return;
       }
+      setLastClickedCountry(countryProps.iso_3166_1);
       checkAnswer(countryProps.iso_3166_1);
     },
     [checkAnswer]
@@ -184,6 +187,8 @@ function useGame() {
     onCountryClick,
     playedLocations: playedCountries,
     availableLocations: countrySet,
+    lastClickedCountry,
+    setLastClickedCountry,
   };
 }
 

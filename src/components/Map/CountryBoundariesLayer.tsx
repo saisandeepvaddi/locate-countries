@@ -50,7 +50,7 @@ function CountryBoundariesLayer() {
           'fill-outline-color': layerTheme.border,
           'fill-opacity': [
             'case',
-            ['==', ['get', 'iso_3166_1'], lastPlayedCountry],
+            ['==', ['get', 'iso_3166_1'], lastPlayedCountry ?? null],
             0.9,
             ['in', ['get', 'iso_3166_1'], ['literal', playedCountries]],
             0.25,

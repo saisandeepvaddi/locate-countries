@@ -24,12 +24,20 @@ function useCountries() {
     setQuestionLocation(randomCountry);
   }, [countrySet, setQuestionLocation, playedCountries]);
 
+  const getCountryByIso = useCallback(
+    (iso: string) => {
+      return countries[iso];
+    },
+    [countries]
+  );
+
   return {
     selectRandomCountry,
     questionLocation,
     countrySet,
     countries,
     playedCountries,
+    getCountryByIso,
   };
 }
 
