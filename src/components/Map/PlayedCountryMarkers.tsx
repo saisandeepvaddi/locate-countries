@@ -11,7 +11,7 @@ interface PlayedCountryMarkersProps {
 }
 
 function PlayedCountryMarkers({
-  countryISOs = [],
+  countryISOs,
   showMarker = true,
   showPopup = false,
 }: PlayedCountryMarkersProps) {
