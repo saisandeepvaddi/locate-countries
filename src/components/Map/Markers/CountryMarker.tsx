@@ -12,7 +12,7 @@ interface CountryMarkerProps {
 function CountryMarker({
   countryIso,
   onClick,
-  type = 'fancy',
+  type = 'normal',
 }: CountryMarkerProps) {
   const { getCountryByIso } = useCountries();
   const country = getCountryByIso(countryIso);
