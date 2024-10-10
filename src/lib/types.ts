@@ -1,8 +1,7 @@
-import { LayerSpecification } from 'maplibre-gl';
+import { Country } from './countries';
 
-export interface Metadata {
-  name?: string;
-  type?: string;
-  tilestats?: unknown;
-  vector_layers: LayerSpecification[];
-}
+export type CountryPopupInfo = {
+  latitude?: number;
+  longitude?: number;
+  country: Country;
+};

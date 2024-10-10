@@ -1,8 +1,10 @@
 'use client';
+import useCountries from '@/hooks/useCountries';
 import useGame from '@/hooks/useGame';
+import { CountryPopupInfo } from '@/lib/types';
 import { useAtomValue, useSetAtom } from 'jotai';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   Map,
   MapMouseEvent,
@@ -18,6 +20,7 @@ import {
   playedCountriesAtom,
 } from '../../state';
 import CountryBoundariesLayer from './CountryBoundariesLayer';
+import CountryPopup from './Markers/CountryPopup';
 import PlayedCountryMarkers from './PlayedCountryMarkers';
 
 // import { prepareData } from '@/lib/prepare';
@@ -31,7 +34,8 @@ export function MapContainer() {
   const { onCountryClick, setMapRef } = useGame();
   const { setLastClickedCountry } = useGame();
   const playedCountries = useAtomValue(playedCountriesAtom);
-
+  const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);
+  const { getCountryByIso } = useCountries();
   const setHoveredCountryProps = useCallback(
     (hoveredCountryProps: CountryProperties) => {
       // setHoveredCountryProperties(hoveredCountryProps);
@@ -85,6 +89,7 @@ export function MapContainer() {
   const handleClick = useCallback(
     (event: MapMouseEvent) => {
       if (!event.features || event.features.length === 0) {
+        setPopupInfo(null);
         setClickedCountryProperties(null);
         return;
       }
@@ -94,12 +99,24 @@ export function MapContainer() {
         return;
       }
       setClickedCountryProperties(event.features[0].properties);
-      if (!playedCountries.includes(clickedCountryIso)) {
+      const isPlayed = playedCountries.includes(clickedCountryIso);
+      if (!isPlayed) {
         onCountryClick(event.features[0].properties);
+      }
+      if (isPlayed) {
+        const { lat, lng } = event.lngLat;
+        const countryInfo = getCountryByIso(clickedCountryIso);
+        setPopupInfo({ country: countryInfo, latitude: lat, longitude: lng });
       }
       setLastClickedCountry(event.features[0].properties?.iso_3166_1 ?? null);
     },
-    [setClickedCountryProperties, onCountryClick, playedCountries]
+    [
+      setClickedCountryProperties,
+      playedCountries,
+      onCountryClick,
+      setLastClickedCountry,
+      getCountryByIso,
+    ]
   );
 
   const onMouseLeave = useCallback(
@@ -115,7 +132,6 @@ export function MapContainer() {
     <Map
       id='map'
       ref={setMapRef}
-      // mapLib={mapboxgl as unknown as MapLib<any>}
       initialViewState={{
         latitude: 0,
         longitude: 20,
@@ -133,6 +149,14 @@ export function MapContainer() {
     >
       <ScaleControl />
       <NavigationControl position='bottom-right' />
+      {popupInfo && (
+        <CountryPopup
+          popup={popupInfo}
+          onClose={() => {
+            setPopupInfo(null);
+          }}
+        />
+      )}
       <PlayedCountryMarkers countryISOs={playedCountries} />
       <CountryBoundariesLayer />
     </Map>
