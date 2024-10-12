@@ -32,8 +32,8 @@ export default function SettingsDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='outline' className='text-white bg-transparent'>
-          <Settings className='h-4 w-4' />
+        <Button size={'icon'}>
+          <Settings className='h-5 w-5' />
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[500px]'>

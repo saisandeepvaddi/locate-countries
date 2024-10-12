@@ -8,8 +8,8 @@ export function GameStateTopBanner() {
   const { isPlaying } = useGame();
 
   return (
-    <div className='absolute top-0 left-0 w-full h-20 bg-slate-950/70 z-50'>
-      <div className='w-full h-full v-center px-2'>
+    <div className='absolute top-0 left-0 w-full h-20 bg-slate-950/50 z-50 px-4'>
+      <div className='w-full h-full v-center'>
         <div className='flex gap-2 flex-1'>
           <QuestionSetSelect />
           <PlayButton />
