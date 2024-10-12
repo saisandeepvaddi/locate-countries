@@ -1,5 +1,5 @@
 import useGame from '@/hooks/useGame';
-import { ThemeSelect } from '../ThemeSelect';
+import SettingsDialog from '../SettingsDialog';
 import PlayButton from './PlayButton';
 import Question from './Question';
 import QuestionSetSelect from './QuestionSetSelect';
@@ -16,7 +16,8 @@ export function GameStateTopBanner() {
         </div>
 
         <div className='flex-1'>{isPlaying && <Question />}</div>
-        <ThemeSelect />
+        {/* <ThemeSelect /> */}
+        <SettingsDialog />
       </div>
     </div>
   );

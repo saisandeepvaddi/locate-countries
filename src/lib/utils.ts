@@ -11,3 +11,10 @@ export function getCoords(country: Country) {
   const longitude = (country.bbox[0] + country.bbox[2]) / 2;
   return { latitude, longitude };
 }
+
+export function prefersDarkMode() {
+  return (
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+}

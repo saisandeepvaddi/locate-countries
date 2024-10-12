@@ -1,7 +1,4 @@
 import { atomWithStorage } from 'jotai/utils';
-import { AvailableThemes } from '../lib/themes';
+import { Theme } from '../lib/themes';
 
-export const layerThemeAtom = atomWithStorage<AvailableThemes>(
-  'theme',
-  AvailableThemes.light
-);
+export const layerThemeAtom = atomWithStorage<Theme>('theme', Theme.light);

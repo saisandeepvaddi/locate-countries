@@ -1,3 +1,5 @@
+import { prefersDarkMode } from './utils';
+
 export interface LayerTheme {
   error: string;
   correct: string;
@@ -34,14 +36,14 @@ const dayLayerTheme: LayerTheme = {
   ocean: '#8ecae6',
 };
 
-export enum AvailableThemes {
-  // DEFAULT = 'default',
+export enum Theme {
+  system = 'system',
   dark = 'dark',
   light = 'light',
 }
 
-export const layerThemes: Record<AvailableThemes, LayerTheme> = {
-  // [AvailableThemes.DEFAULT]: defaultLayerTheme,
-  [AvailableThemes.dark]: nightLayerTheme,
-  [AvailableThemes.light]: dayLayerTheme,
+export const layerThemes: Record<Theme, LayerTheme> = {
+  [Theme.system]: prefersDarkMode() ? nightLayerTheme : dayLayerTheme,
+  [Theme.dark]: nightLayerTheme,
+  [Theme.light]: dayLayerTheme,
 };

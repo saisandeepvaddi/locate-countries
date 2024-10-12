@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/select';
 import { layerThemeAtom } from '@/state/settings';
 import { useAtom } from 'jotai';
-import { AvailableThemes } from '../lib/themes';
+import { Theme } from '../lib/themes';
 
 export function ThemeSelect() {
   const [selectedTheme, setSelectedTheme] = useAtom(layerThemeAtom);
@@ -15,14 +15,14 @@ export function ThemeSelect() {
     <Select
       value={selectedTheme}
       onValueChange={(value) => {
-        setSelectedTheme(value as AvailableThemes);
+        setSelectedTheme(value as Theme);
       }}
     >
       <SelectTrigger className='w-[280px] bg-slate-950 text-white'>
         <SelectValue placeholder='Theme' />
       </SelectTrigger>
       <SelectContent className='bg-slate-950 text-white'>
-        {Object.values(AvailableThemes).map((theme) => (
+        {Object.values(Theme).map((theme) => (
           <SelectItem key={theme} value={theme}>
             {theme.charAt(0).toUpperCase() + theme.slice(1)}
           </SelectItem>
