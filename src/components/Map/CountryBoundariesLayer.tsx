@@ -1,19 +1,21 @@
+import { layerThemes } from '@/lib/themes';
+import { layerThemeAtom } from '@/state/settings';
 import { useAtomValue } from 'jotai';
 import { Layer, Source } from 'react-map-gl';
 import {
   correctCountriesAtom,
   errorCountriesAtom,
   hoveredCountryIdAtom,
-  layerThemeAtom,
   playedCountriesAtom,
-} from '../../state';
+} from '../../state/game';
 
 function CountryBoundariesLayer() {
   const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
   const correctCountries = useAtomValue(correctCountriesAtom);
   const errorCountries = useAtomValue(errorCountriesAtom);
   const playedCountries = useAtomValue(playedCountriesAtom);
-  const layerTheme = useAtomValue(layerThemeAtom);
+  const selectedTheme = useAtomValue(layerThemeAtom);
+  const layerTheme = layerThemes[selectedTheme] ?? layerThemes.light;
   const lastPlayedCountry = playedCountries[playedCountries.length - 1];
   return (
     <Source

@@ -1,7 +1,6 @@
 import { atom } from 'jotai';
 import { GeoJSONFeature } from 'mapbox-gl';
-import { countries, Country } from './lib/countries';
-import { LayerTheme, layerThemes } from './lib/themes';
+import { countries, Country } from '../lib/countries';
 
 export type CountryProperties = GeoJSONFeature['properties'];
 
@@ -10,8 +9,6 @@ export type CountryQuestion = {
   iso_3166_1: string;
   bbox: [number, number, number, number];
 };
-
-export const layerThemeAtom = atom<LayerTheme>(layerThemes.day);
 
 export const hoveredCountryPropsAtom = atom<CountryProperties | null>(null);
 export const clickedCountryPropsAtom = atom<CountryProperties | null>(null);

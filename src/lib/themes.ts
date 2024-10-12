@@ -36,12 +36,12 @@ const dayLayerTheme: LayerTheme = {
 
 export enum AvailableThemes {
   // DEFAULT = 'default',
-  NIGHT = 'night',
-  DAY = 'day',
+  dark = 'dark',
+  light = 'light',
 }
 
 export const layerThemes: Record<AvailableThemes, LayerTheme> = {
   // [AvailableThemes.DEFAULT]: defaultLayerTheme,
-  [AvailableThemes.NIGHT]: nightLayerTheme,
-  [AvailableThemes.DAY]: dayLayerTheme,
+  [AvailableThemes.dark]: nightLayerTheme,
+  [AvailableThemes.light]: dayLayerTheme,
 };

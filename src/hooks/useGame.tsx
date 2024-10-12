@@ -5,7 +5,7 @@ import {
   errorCountriesAtom,
   isPlayingAtom,
   maxAttemptsAtom,
-} from '@/state';
+} from '@/state/game';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { LngLatLike } from 'mapbox-gl';
 import { useCallback, useRef, useState } from 'react';

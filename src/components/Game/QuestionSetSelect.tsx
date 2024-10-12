@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import useGame from '@/hooks/useGame';
-import { questionSetAtom, RegionSet } from '@/state';
+import { RegionSet, questionSetAtom } from '@/state/game';
 
 import { useAtom } from 'jotai';
 

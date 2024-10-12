@@ -18,7 +18,7 @@ import {
   hoveredCountryPropsAtom,
   isPlayingAtom,
   playedCountriesAtom,
-} from '../../state';
+} from '../../state/game';
 import CountryBoundariesLayer from './CountryBoundariesLayer';
 import CountryPopup from './Markers/CountryPopup';
 import PlayedCountryMarkers from './PlayedCountryMarkers';

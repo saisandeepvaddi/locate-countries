@@ -3,7 +3,7 @@ import {
   availableCountriesBySet,
   countryInQuestionAtom,
   playedCountriesAtom,
-} from '@/state';
+} from '@/state/game';
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 

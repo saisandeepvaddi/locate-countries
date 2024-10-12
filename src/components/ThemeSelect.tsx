@@ -5,25 +5,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useSetAtom } from 'jotai';
-import { useState } from 'react';
-import { AvailableThemes, layerThemes } from '../lib/themes';
-import { layerThemeAtom } from '../state';
+import { layerThemeAtom } from '@/state/settings';
+import { useAtom } from 'jotai';
+import { AvailableThemes } from '../lib/themes';
 
 export function ThemeSelect() {
-  const prefersDarkMode = window.matchMedia(
-    '(prefers-color-scheme: dark)'
-  ).matches;
-  const [selectedTheme, setSelectedTheme] = useState<AvailableThemes>(
-    prefersDarkMode ? AvailableThemes.NIGHT : AvailableThemes.DAY
-  );
-  const setTheme = useSetAtom(layerThemeAtom);
+  const [selectedTheme, setSelectedTheme] = useAtom(layerThemeAtom);
   return (
     <Select
       value={selectedTheme}
       onValueChange={(value) => {
         setSelectedTheme(value as AvailableThemes);
-        setTheme(layerThemes[value as AvailableThemes]);
       }}
     >
       <SelectTrigger className='w-[280px] bg-slate-950 text-white'>
