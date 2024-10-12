@@ -1,5 +1,5 @@
 import { layerThemes } from '@/lib/themes';
-import { layerThemeAtom } from '@/state/settings';
+import { themeAtom } from '@/state/settings';
 import { useAtomValue } from 'jotai';
 import { Layer, Source } from 'react-map-gl';
 import {
@@ -14,7 +14,7 @@ function CountryBoundariesLayer() {
   const correctCountries = useAtomValue(correctCountriesAtom);
   const errorCountries = useAtomValue(errorCountriesAtom);
   const playedCountries = useAtomValue(playedCountriesAtom);
-  const selectedTheme = useAtomValue(layerThemeAtom);
+  const selectedTheme = useAtomValue(themeAtom);
   const layerTheme = layerThemes[selectedTheme] ?? layerThemes.light;
   const lastPlayedCountry = playedCountries[playedCountries.length - 1];
   return (

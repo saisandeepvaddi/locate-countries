@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -18,28 +17,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Theme } from '@/lib/themes';
-import { layerThemeAtom } from '@/state/settings';
+import { themeAtom } from '@/state/settings';
 import { useAtom } from 'jotai';
-import { InfoIcon, Laptop, Moon, Settings, Sun } from 'lucide-react';
-import { useState } from 'react';
+import { Laptop, Moon, Settings, Sun } from 'lucide-react';
+import MapboxKeyInput from './MapboxKeyInput';
 
 export default function SettingsDialog() {
-  const [theme, setTheme] = useAtom(layerThemeAtom);
-  const [apiKey, setApiKey] = useState('');
+  const [theme, setTheme] = useAtom(themeAtom);
 
   const handleThemeChange = (value: Theme) => {
     setTheme(value);
-    // Here you would typically apply the theme to your application
-    console.log(`Theme changed to: ${value}`);
-  };
-
-  const handleApiKeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setApiKey(event.target.value);
-  };
-
-  const handleSave = () => {
-    // Here you would typically save the settings
-    console.log('Settings saved:', { theme, apiKey });
   };
 
   return (
@@ -84,35 +71,7 @@ export default function SettingsDialog() {
               </SelectContent>
             </Select>
           </div>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='apiKey' className='text-right'>
-              Mapbox API Key
-            </Label>
-            <Input
-              id='apiKey'
-              value={apiKey}
-              onChange={handleApiKeyChange}
-              className='col-span-3'
-              type='password'
-            />
-          </div>
-          <div className='grid grid-cols-4 items-center gap-2'>
-            <div className='col-span-1'></div>
-            <p className='text-xs text-slate-400 col-span-3 flex items-center gap-2'>
-              <InfoIcon className='h-4 w-4' />
-              <a
-                href='https://www.mapbox.com/account/access-tokens/'
-                target='_blank'
-                className='underline'
-                rel='noreferrer noopener'
-              >
-                Get your Mapbox API key from here
-              </a>
-            </p>
-          </div>
-        </div>
-        <div className='flex justify-end'>
-          <Button onClick={handleSave}>Save changes</Button>
+          <MapboxKeyInput />
         </div>
       </DialogContent>
     </Dialog>

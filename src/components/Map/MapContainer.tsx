@@ -2,6 +2,7 @@
 import useCountries from '@/hooks/useCountries';
 import useGame from '@/hooks/useGame';
 import { CountryPopupInfo } from '@/lib/types';
+import { mapboxApiKeyAtom } from '@/state/settings';
 import { useAtomValue, useSetAtom } from 'jotai';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useState } from 'react';
@@ -19,6 +20,14 @@ import {
   isPlayingAtom,
   playedCountriesAtom,
 } from '../../state/game';
+import MapboxKeyInput from '../Settings/MapboxKeyInput';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog';
 import CountryBoundariesLayer from './CountryBoundariesLayer';
 import CountryPopup from './Markers/CountryPopup';
 import PlayedCountryMarkers from './PlayedCountryMarkers';
@@ -35,10 +44,10 @@ export function MapContainer() {
   const { setLastClickedCountry } = useGame();
   const playedCountries = useAtomValue(playedCountriesAtom);
   const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);
+  const mapboxApiKey = useAtomValue(mapboxApiKeyAtom);
   const { getCountryByIso } = useCountries();
   const setHoveredCountryProps = useCallback(
     (hoveredCountryProps: CountryProperties) => {
-      // setHoveredCountryProperties(hoveredCountryProps);
       setHoveredCountryId(hoveredCountryProps?.iso_3166_1 ?? null);
     },
     [setHoveredCountryId]
@@ -128,6 +137,41 @@ export function MapContainer() {
     [setHoveredCountryProperties]
   );
 
+  // const apikey = import.meta.env.DEV
+  //   ? import.meta.env.VITE_MAPBOX_TOKEN
+  //   : mapboxApiKey;
+  const apikey = mapboxApiKey;
+
+  if (!apikey) {
+    return (
+      <Dialog modal defaultOpen>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>No Mapbox API key</DialogTitle>
+          </DialogHeader>
+          <DialogDescription>
+            This free app uses{' '}
+            <a
+              href='https://www.mapbox.com/'
+              target='_blank'
+              rel='noreferrer noopener'
+              className='underline'
+            >
+              Mapbox service
+            </a>
+            . I cannot pay for a Mapbox API beyond its allowed free-tier limits.
+            Please get a free key and paste here.
+          </DialogDescription>
+          <MapboxKeyInput
+            onApiKeyChange={() => {
+              window.location.reload();
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <Map
       id='map'
@@ -140,7 +184,7 @@ export function MapContainer() {
         pitch: 0,
       }}
       style={{ width: '100vw', height: '100vh' }}
-      mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
+      mapboxAccessToken={apikey}
       reuseMaps
       interactiveLayerIds={isPlaying ? ['country-boundaries'] : []}
       onMouseMove={onHover}
