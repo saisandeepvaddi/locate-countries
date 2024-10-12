@@ -29,11 +29,11 @@ const nightLayerTheme: LayerTheme = {
 
 const dayLayerTheme: LayerTheme = {
   error: '#FB5012',
-  correct: '#734124',
+  correct: '#69DC9E',
   hovered: '#BFA18F',
   default: '#F2F2F0',
   border: '#734124',
-  ocean: '#8ecae6',
+  ocean: '#96C6D9',
 };
 
 export enum Theme {

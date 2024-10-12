@@ -1,6 +1,6 @@
 import { countries } from '@/lib/countries';
 import {
-  availableCountriesBySet,
+  availableCountriesForActiveSet,
   countryInQuestionAtom,
   playedCountriesAtom,
 } from '@/state/game';
@@ -13,7 +13,7 @@ function useCountries() {
   );
 
   const playedCountries = useAtomValue(playedCountriesAtom);
-  const countrySet = useAtomValue(availableCountriesBySet);
+  const countrySet = useAtomValue(availableCountriesForActiveSet);
 
   const selectRandomCountry = useCallback(() => {
     const availableCountries = countrySet.filter(
