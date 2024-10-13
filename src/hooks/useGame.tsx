@@ -26,6 +26,7 @@ function useGame() {
   } = useCountries();
   const setCorrectCountries = useSetAtom(correctCountriesAtom);
   const setErrorCountries = useSetAtom(errorCountriesAtom);
+
   const mapRef = useRef<MapRef>(null);
   const [lastClickedCountry, setLastClickedCountry] = useState<string | null>(
     null
@@ -183,6 +184,7 @@ function useGame() {
     endGame,
     questionLocation: questionLocation,
     shuffleQuestion,
+    mapRef,
     setMapRef,
     onCountryClick,
     playedLocations: playedCountries,

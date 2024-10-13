@@ -677,7 +677,7 @@ export const countries: Record<string, Country> = {
     iso_3166_1: 'CI',
     bbox: [-8.6021, 4.3619, -2.493, 10.7411],
     mapbox_id: 'dXJuOm1ieGJuZDpjUkFzOnY0',
-    name: "Côte d'Ivoire",
+    name: "Côte d'Ivoire (Ivory Coast)",
     'alpha-2': 'CI',
     'alpha-3': 'CIV',
     'country-code': '384',
