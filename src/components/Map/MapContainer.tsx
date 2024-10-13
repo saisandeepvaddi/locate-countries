@@ -1,9 +1,15 @@
 'use client';
 import useCountries from '@/hooks/useCountries';
 import useGame from '@/hooks/useGame';
+import { MAX_FREE_LOADS } from '@/lib/constants';
 import { CountryPopupInfo } from '@/lib/types';
-import { mapboxApiKeyAtom } from '@/state/settings';
+import {
+  lastUsedDateAtom,
+  mapboxApiKeyAtom,
+  pageLoadCountTodayAtom,
+} from '@/state/settings';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomCallback } from 'jotai/utils';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useState } from 'react';
 import {
@@ -40,12 +46,12 @@ export function MapContainer() {
   const setHoveredCountryProperties = useSetAtom(hoveredCountryPropsAtom);
   const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
   const setHoveredCountryId = useSetAtom(hoveredCountryIdAtom);
-  const { onCountryClick, setMapRef } = useGame();
-  const { setLastClickedCountry } = useGame();
+  const { onCountryClick, setMapRef, setLastClickedCountry } = useGame();
   const playedCountries = useAtomValue(playedCountriesAtom);
   const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);
   const mapboxApiKey = useAtomValue(mapboxApiKeyAtom);
   const { getCountryByIso } = useCountries();
+  const pageLoadCountToday = useAtomValue(pageLoadCountTodayAtom);
   const setHoveredCountryProps = useCallback(
     (hoveredCountryProps: CountryProperties) => {
       setHoveredCountryId(hoveredCountryProps?.iso_3166_1 ?? null);
@@ -137,10 +143,22 @@ export function MapContainer() {
     [setHoveredCountryProperties]
   );
 
-  // const apikey = import.meta.env.DEV
-  //   ? import.meta.env.VITE_MAPBOX_TOKEN
-  //   : mapboxApiKey;
-  const apikey = mapboxApiKey;
+  const handleMapLoad = useAtomCallback((get, set) => {
+    const lastUsedDate = get(lastUsedDateAtom);
+    const now = new Date();
+    if (lastUsedDate && lastUsedDate.toDateString() !== now.toDateString()) {
+      set(pageLoadCountTodayAtom, 1);
+    } else {
+      set(pageLoadCountTodayAtom, get(pageLoadCountTodayAtom) + 1);
+    }
+    set(lastUsedDateAtom, now);
+  });
+
+  const withinFreeLoads = pageLoadCountToday <= MAX_FREE_LOADS;
+  const freeAPIKey = import.meta.env.VITE_MAPBOX_TOKEN;
+
+  const apikey = withinFreeLoads ? freeAPIKey : mapboxApiKey;
+  console.log({ withinFreeLoads, freeAPIKey, mapboxApiKey, apikey });
 
   if (!apikey) {
     return (
@@ -190,6 +208,7 @@ export function MapContainer() {
       onMouseMove={onHover}
       onMouseLeave={onMouseLeave}
       onClick={handleClick}
+      onLoad={handleMapLoad}
     >
       <ScaleControl />
       <NavigationControl position='bottom-right' />

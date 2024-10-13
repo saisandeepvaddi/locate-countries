@@ -18,3 +18,13 @@ store.sub(themeAtom, () => {
 });
 
 export const mapboxApiKeyAtom = atomWithStorage<string>('mapboxApiKey', '');
+
+export const pageLoadCountTodayAtom = atomWithStorage<number>(
+  'pageLoadCountToday',
+  0
+);
+
+export const lastUsedDateAtom = atomWithStorage<Date>(
+  'lastUsedDate',
+  new Date()
+);
