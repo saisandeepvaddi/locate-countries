@@ -11,7 +11,7 @@ export type CountryQuestion = {
   bbox: [number, number, number, number];
 };
 
-export const hoveredCountryPropsAtom = atom<CountryProperties | null>(null);
+// export const hoveredCountryPropsAtom = atom<CountryProperties | null>(null);
 export const clickedCountryPropsAtom = atom<CountryProperties | null>(null);
 export const hoveredCountryIdAtom = atom<string | null>(null);
 

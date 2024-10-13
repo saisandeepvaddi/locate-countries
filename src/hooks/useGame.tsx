@@ -35,6 +35,8 @@ function useGame() {
     mapRef.current = ref;
   }, []);
 
+  const getMapRef = useCallback(() => mapRef.current, []);
+
   const resetGame = useCallback(() => {
     setAttempts(0);
     setCorrectCountries([]);
@@ -185,6 +187,7 @@ function useGame() {
     questionLocation: questionLocation,
     shuffleQuestion,
     mapRef,
+    getMapRef,
     setMapRef,
     onCountryClick,
     playedLocations: playedCountries,

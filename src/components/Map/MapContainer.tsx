@@ -22,7 +22,6 @@ import {
   clickedCountryPropsAtom,
   CountryProperties,
   hoveredCountryIdAtom,
-  hoveredCountryPropsAtom,
   isPlayingAtom,
   playedCountriesAtom,
 } from '../../state/game';
@@ -43,7 +42,6 @@ import PlayedCountryMarkers from './PlayedCountryMarkers';
 
 export function MapContainer() {
   const isPlaying = useAtomValue(isPlayingAtom);
-  const setHoveredCountryProperties = useSetAtom(hoveredCountryPropsAtom);
   const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
   const setHoveredCountryId = useSetAtom(hoveredCountryIdAtom);
   const { onCountryClick, setMapRef, setLastClickedCountry } = useGame();
@@ -64,7 +62,6 @@ export function MapContainer() {
       const map = event.target;
       const features = event.features;
       if (!features || features.length === 0) {
-        setHoveredCountryProperties(null);
         setHoveredCountryId(null);
         return;
       }
@@ -98,7 +95,7 @@ export function MapContainer() {
       );
       setHoveredCountryProps(features[0].properties);
     },
-    [setHoveredCountryId, setHoveredCountryProperties, setHoveredCountryProps]
+    [setHoveredCountryId, setHoveredCountryProps]
   );
 
   const handleClick = useCallback(
@@ -138,9 +135,9 @@ export function MapContainer() {
     (event: MapMouseEvent) => {
       const map = event.target;
       map.getCanvasContainer().style.cursor = '';
-      setHoveredCountryProperties(null);
+      setHoveredCountryId(null);
     },
-    [setHoveredCountryProperties]
+    [setHoveredCountryId]
   );
 
   const handleMapLoad = useAtomCallback((get, set) => {
