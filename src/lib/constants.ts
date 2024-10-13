@@ -1,1 +1,1 @@
-export const MAX_FREE_LOADS = 5;
+export const MAX_FREE_LOADS = 10;
