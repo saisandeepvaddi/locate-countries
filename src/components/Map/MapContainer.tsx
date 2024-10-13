@@ -40,6 +40,15 @@ import PlayedCountryMarkers from './PlayedCountryMarkers';
 // import { prepareData } from '@/lib/prepare';
 // window.v = prepareData();
 
+const initialViewState = {
+  latitude: 0,
+  longitude: 20,
+  zoom: 2,
+  bearing: 0,
+  pitch: 0,
+};
+
+const mapContainerStyle = { width: '100vw', height: '100vh' };
 export function MapContainer() {
   const isPlaying = useAtomValue(isPlayingAtom);
   const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
@@ -190,14 +199,8 @@ export function MapContainer() {
     <Map
       id='map'
       ref={setMapRef}
-      initialViewState={{
-        latitude: 0,
-        longitude: 20,
-        zoom: 2,
-        bearing: 0,
-        pitch: 0,
-      }}
-      style={{ width: '100vw', height: '100vh' }}
+      initialViewState={initialViewState}
+      style={mapContainerStyle}
       mapboxAccessToken={apikey}
       reuseMaps
       interactiveLayerIds={isPlaying ? ['country-boundaries'] : []}
