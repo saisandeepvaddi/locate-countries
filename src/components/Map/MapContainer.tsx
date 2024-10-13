@@ -158,7 +158,6 @@ export function MapContainer() {
   const freeAPIKey = import.meta.env.VITE_MAPBOX_TOKEN;
 
   const apikey = withinFreeLoads ? freeAPIKey : mapboxApiKey;
-  console.log({ withinFreeLoads, freeAPIKey, mapboxApiKey, apikey });
 
   if (!apikey) {
     return (
