@@ -10,7 +10,7 @@ import {
 } from '@/state/settings';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
-import 'mapbox-gl/dist/mapbox-gl.css';
+// import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useState } from 'react';
 import { Map, MapMouseEvent } from 'react-map-gl';
 import {
@@ -161,7 +161,7 @@ export function MapContainer() {
       style={mapContainerStyle}
       mapboxAccessToken={apikey}
       // baseApiUrl={`${window.location.origin}/mapbox`}
-      reuseMaps
+      // reuseMaps
       interactiveLayerIds={
         isPlaying
           ? [

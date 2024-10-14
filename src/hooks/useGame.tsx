@@ -7,9 +7,9 @@ import {
   maxAttemptsAtom,
 } from '@/state/game';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { LngLatLike } from 'mapbox-gl';
+// import { LngLatLike } from 'mapbox-gl';
 import { useCallback, useRef, useState } from 'react';
-import { MapRef } from 'react-map-gl';
+import { LngLatLike, MapRef } from 'react-map-gl';
 import { toast } from './use-toast';
 import useCountries from './useCountries';
 

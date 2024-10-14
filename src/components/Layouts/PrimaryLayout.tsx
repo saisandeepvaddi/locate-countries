@@ -7,6 +7,7 @@ function PrimaryLayout() {
     <MapProvider>
       <GameStateTopBanner />
       <MapContainer />
+      {/* <TestMapContainer /> */}
     </MapProvider>
   );
 }

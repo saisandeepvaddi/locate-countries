@@ -1,9 +1,8 @@
 import { getCountriesBySet } from '@/lib/utils';
 import { atom } from 'jotai';
-import { GeoJSONFeature } from 'mapbox-gl';
 import { Country } from '../lib/countries';
 
-export type CountryProperties = GeoJSONFeature['properties'];
+export type CountryProperties = any; // GeoJSONFeature['properties'];
 
 export type CountryQuestion = {
   name: string;
