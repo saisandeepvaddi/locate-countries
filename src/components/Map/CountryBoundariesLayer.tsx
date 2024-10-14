@@ -1,22 +1,16 @@
 import { layerThemes } from '@/lib/themes';
+import { hoveredCountryIdAtom } from '@/state/game';
 import { themeAtom } from '@/state/settings';
 import { useAtomValue } from 'jotai';
 import { Layer, Source } from 'react-map-gl';
-import {
-  correctCountriesAtom,
-  errorCountriesAtom,
-  hoveredCountryIdAtom,
-  playedCountriesAtom,
-} from '../../state/game';
+import CorrectLayer from './Layers/CorrectLayer';
+import HoveredLayer from './Layers/HoveredLayer';
+import IncorrectLayer from './Layers/IncorrectLayer';
 
 function CountryBoundariesLayer() {
-  const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
-  const correctCountries = useAtomValue(correctCountriesAtom);
-  const errorCountries = useAtomValue(errorCountriesAtom);
-  const playedCountries = useAtomValue(playedCountriesAtom);
   const selectedTheme = useAtomValue(themeAtom);
   const layerTheme = layerThemes[selectedTheme] ?? layerThemes.light;
-  const lastPlayedCountry = playedCountries[playedCountries.length - 1];
+  const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
   return (
     <Source
       id='country-boundaries'
@@ -35,31 +29,13 @@ function CountryBoundariesLayer() {
         type='fill'
         source-layer='country_boundaries'
         paint={{
-          'fill-color': [
-            'case',
-            ['in', ['get', 'iso_3166_1'], ['literal', errorCountries]],
-            layerTheme.error, // Red color for error countries
-            ['in', ['get', 'iso_3166_1'], ['literal', correctCountries]],
-            layerTheme.correct, // Green color for correct countries
-            [
-              'boolean',
-              ['==', ['get', 'iso_3166_1'], hoveredCountryId ?? null],
-              0,
-            ],
-            layerTheme.hovered, // Hovered country color
-            layerTheme.default, // Default color
-          ],
+          'fill-color': layerTheme.default,
           'fill-outline-color': layerTheme.border,
-          'fill-opacity': [
-            'case',
-            ['==', ['get', 'iso_3166_1'], lastPlayedCountry ?? null],
-            0.9,
-            ['in', ['get', 'iso_3166_1'], ['literal', playedCountries]],
-            0.25,
-            1,
-          ],
         }}
       />
+      <HoveredLayer hoveredCountryId={hoveredCountryId} />
+      <CorrectLayer />
+      <IncorrectLayer />
     </Source>
   );
 }

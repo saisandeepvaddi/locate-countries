@@ -3,3 +3,7 @@
 	file_server
 	encode zstd gzip
 }
+
+:8080 {
+	reverse_proxy localhost:5173
+}

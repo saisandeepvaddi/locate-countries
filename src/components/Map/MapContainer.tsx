@@ -8,19 +8,13 @@ import {
   mapboxApiKeyAtom,
   pageLoadCountTodayAtom,
 } from '@/state/settings';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useCallback, useState } from 'react';
-import {
-  Map,
-  MapMouseEvent,
-  NavigationControl,
-  ScaleControl,
-} from 'react-map-gl';
+import { Map, MapMouseEvent } from 'react-map-gl';
 import {
   clickedCountryPropsAtom,
-  CountryProperties,
   hoveredCountryIdAtom,
   isPlayingAtom,
   playedCountriesAtom,
@@ -52,19 +46,14 @@ const mapContainerStyle = { width: '100vw', height: '100vh' };
 export function MapContainer() {
   const isPlaying = useAtomValue(isPlayingAtom);
   const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
-  const setHoveredCountryId = useSetAtom(hoveredCountryIdAtom);
+  const [lastHoveredCountryId, setHoveredCountryId] =
+    useAtom(hoveredCountryIdAtom);
   const { onCountryClick, setMapRef, setLastClickedCountry } = useGame();
   const playedCountries = useAtomValue(playedCountriesAtom);
   const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);
   const mapboxApiKey = useAtomValue(mapboxApiKeyAtom);
   const { getCountryByIso } = useCountries();
   const pageLoadCountToday = useAtomValue(pageLoadCountTodayAtom);
-  const setHoveredCountryProps = useCallback(
-    (hoveredCountryProps: CountryProperties) => {
-      setHoveredCountryId(hoveredCountryProps?.iso_3166_1 ?? null);
-    },
-    [setHoveredCountryId]
-  );
 
   const onHover = useCallback(
     (event: MapMouseEvent) => {
@@ -72,39 +61,17 @@ export function MapContainer() {
       const features = event.features;
       if (!features || features.length === 0) {
         setHoveredCountryId(null);
+        map.getCanvasContainer().style.cursor = '';
         return;
       }
-      const featureId = features[0].id as string;
-      const countryHovered = features[0].properties?.iso_3166_1;
-      if (
-        countryHovered &&
-        countryHovered !== features[0].properties?.iso_3166_1
-      ) {
-        map.setFeatureState(
-          {
-            source: 'country-boundaries',
-            sourceLayer: 'country_boundaries',
-            id: featureId,
-          },
-          {
-            hover: false,
-          }
-        );
+      const newHoveredCountry = features[0].properties?.iso_3166_1;
+
+      if (newHoveredCountry !== lastHoveredCountryId) {
+        map.getCanvasContainer().style.cursor = 'pointer';
+        setHoveredCountryId(newHoveredCountry);
       }
-      map.getCanvasContainer().style.cursor = 'pointer';
-      map.setFeatureState(
-        {
-          source: 'country-boundaries',
-          sourceLayer: 'country_boundaries',
-          id: featureId,
-        },
-        {
-          hover: true,
-        }
-      );
-      setHoveredCountryProps(features[0].properties);
     },
-    [setHoveredCountryId, setHoveredCountryProps]
+    [lastHoveredCountryId, setHoveredCountryId]
   );
 
   const handleClick = useCallback(
@@ -138,15 +105,6 @@ export function MapContainer() {
       setLastClickedCountry,
       getCountryByIso,
     ]
-  );
-
-  const onMouseLeave = useCallback(
-    (event: MapMouseEvent) => {
-      const map = event.target;
-      map.getCanvasContainer().style.cursor = '';
-      setHoveredCountryId(null);
-    },
-    [setHoveredCountryId]
   );
 
   const handleMapLoad = useAtomCallback((get, set) => {
@@ -203,14 +161,22 @@ export function MapContainer() {
       style={mapContainerStyle}
       mapboxAccessToken={apikey}
       reuseMaps
-      interactiveLayerIds={isPlaying ? ['country-boundaries'] : []}
+      interactiveLayerIds={
+        isPlaying
+          ? [
+              'country-boundaries',
+              'country-boundaries-hover',
+              'country-boundaries-incorrect',
+            ]
+          : []
+      }
       onMouseMove={onHover}
-      onMouseLeave={onMouseLeave}
+      // onMouseLeave={onMouseLeave}
       onClick={handleClick}
       onLoad={handleMapLoad}
     >
-      <ScaleControl />
-      <NavigationControl position='bottom-right' />
+      {/* <ScaleControl />
+      <NavigationControl position='bottom-right' /> */}
       {popupInfo && (
         <CountryPopup
           popup={popupInfo}
@@ -220,6 +186,7 @@ export function MapContainer() {
         />
       )}
       <PlayedCountryMarkers countryISOs={playedCountries} />
+
       <CountryBoundariesLayer />
     </Map>
   );
