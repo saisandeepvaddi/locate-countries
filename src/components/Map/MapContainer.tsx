@@ -160,6 +160,7 @@ export function MapContainer() {
       initialViewState={initialViewState}
       style={mapContainerStyle}
       mapboxAccessToken={apikey}
+      // baseApiUrl={`${window.location.origin}/mapbox`}
       reuseMaps
       interactiveLayerIds={
         isPlaying
