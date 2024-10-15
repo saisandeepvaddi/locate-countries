@@ -1,8 +1,4 @@
 :8181 {
-	# log {
-	# 	level debug
-	# }
-	# Serve the static site from the dist folder
 	root * ./dist
 	file_server
 

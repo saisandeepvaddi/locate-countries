@@ -119,9 +119,9 @@ export function MapContainer() {
   });
 
   const withinFreeLoads = pageLoadCountToday <= MAX_FREE_LOADS;
-  const freeAPIKey = import.meta.env.VITE_MAPBOX_TOKEN;
+  const freeAPIKey = import.meta.env.VITE_MAPBOX_TOKEN ?? mapboxApiKey;
 
-  const apikey = withinFreeLoads ? freeAPIKey : mapboxApiKey;
+  const apikey = mapboxApiKey ?? (withinFreeLoads ? freeAPIKey : null);
 
   if (!apikey) {
     return (
