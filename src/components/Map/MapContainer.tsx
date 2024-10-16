@@ -121,7 +121,11 @@ export function MapContainer() {
   const withinFreeLoads = pageLoadCountToday <= MAX_FREE_LOADS;
   const freeAPIKey = import.meta.env.VITE_MAPBOX_TOKEN ?? mapboxApiKey;
 
-  const apikey = mapboxApiKey ?? (withinFreeLoads ? freeAPIKey : null);
+  const apikey = mapboxApiKey
+    ? mapboxApiKey
+    : withinFreeLoads || import.meta.env.MODE === 'development'
+    ? freeAPIKey
+    : null;
 
   if (!apikey) {
     return (
