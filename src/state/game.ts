@@ -1,6 +1,6 @@
-import { getCountriesBySet } from '@/lib/utils';
-import { atom } from 'jotai';
-import { Country } from '../lib/countries';
+import { getCountriesBySet } from "@/lib/utils";
+import { atom } from "jotai";
+import { Country } from "../lib/countries";
 
 export type CountryProperties = any; // GeoJSONFeature['properties'];
 
@@ -29,12 +29,12 @@ export const playedCountriesAtom = atom<string[]>((get) => {
 });
 
 export enum RegionSet {
-  ALL = 'ALL',
-  EUROPE = 'EUROPE',
-  ASIA = 'ASIA',
-  AMERICAS = 'AMERICAS',
-  AFRICA = 'AFRICA',
-  OCEANIA = 'OCEANIA',
+  ALL = "ALL",
+  EUROPE = "EUROPE",
+  ASIA = "ASIA",
+  AMERICAS = "AMERICAS",
+  AFRICA = "AFRICA",
+  OCEANIA = "OCEANIA",
 }
 
 export const questionSetAtom = atom<RegionSet>(RegionSet.ALL);

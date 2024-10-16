@@ -1,8 +1,8 @@
-import { Country } from '@/lib/countries';
-import { CountryPopupInfo } from '@/lib/types';
-import { useMemo, useState } from 'react';
-import CountryMarker from './Markers/CountryMarker';
-import CountryPopup from './Markers/CountryPopup';
+import { Country } from "@/lib/countries";
+import { CountryPopupInfo } from "@/lib/types";
+import { useMemo, useState } from "react";
+import CountryMarker from "./Markers/CountryMarker";
+import CountryPopup from "./Markers/CountryPopup";
 
 interface PlayedCountryMarkersProps {
   countryISOs: string[];
@@ -26,7 +26,7 @@ function PlayedCountryMarkers({
           onClick={(country: Country) => {
             setPopupInfo({ country });
           }}
-          type='normal'
+          type="normal"
         />
       );
     });

@@ -1,4 +1,4 @@
-import { prefersDarkMode } from './utils';
+import { prefersDarkMode } from "./utils";
 
 export interface LayerTheme {
   error: string;
@@ -19,27 +19,27 @@ export interface LayerTheme {
 // };
 
 const nightLayerTheme: LayerTheme = {
-  error: '#d90429',
-  correct: '#2a9d8f',
-  hovered: '#BFA18F',
-  default: '#1f1f1f',
-  border: '#DBDBDB',
-  ocean: '#131316',
+  error: "#d90429",
+  correct: "#2a9d8f",
+  hovered: "#BFA18F",
+  default: "#1f1f1f",
+  border: "#DBDBDB",
+  ocean: "#131316",
 };
 
 const dayLayerTheme: LayerTheme = {
-  error: '#FB5012',
-  correct: '#69DC9E',
-  hovered: '#BFA18F',
-  default: '#F2F2F0',
-  border: '#734124',
-  ocean: '#96C6D9',
+  error: "#FB5012",
+  correct: "#69DC9E",
+  hovered: "#BFA18F",
+  default: "#F2F2F0",
+  border: "#734124",
+  ocean: "#96C6D9",
 };
 
 export enum Theme {
-  system = 'system',
-  dark = 'dark',
-  light = 'light',
+  system = "system",
+  dark = "dark",
+  light = "light",
 }
 
 export const layerThemes: Record<Theme, LayerTheme> = {

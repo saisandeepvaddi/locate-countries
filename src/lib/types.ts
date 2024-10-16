@@ -1,4 +1,4 @@
-import { Country } from './countries';
+import { Country } from "./countries";
 
 export type CountryPopupInfo = {
   latitude?: number;

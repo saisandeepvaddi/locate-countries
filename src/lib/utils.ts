@@ -1,8 +1,8 @@
-import { RegionSet } from '@/state/game';
-import { clsx, type ClassValue } from 'clsx';
-import { memoize } from 'lodash';
-import { twMerge } from 'tailwind-merge';
-import { countries, Country } from './countries';
+import { RegionSet } from "@/state/game";
+import { clsx, type ClassValue } from "clsx";
+import { memoize } from "lodash";
+import { twMerge } from "tailwind-merge";
+import { countries, Country } from "./countries";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,7 +18,7 @@ export const getCountriesBySet = memoize((set: RegionSet) => {
   const countryObjects = Object.values(countries);
 
   if (set === RegionSet.ALL) {
-    return countryObjects.filter((country) => country.region !== 'Antarctica');
+    return countryObjects.filter((country) => country.region !== "Antarctica");
   }
 
   return countryObjects.filter((country) => {
@@ -29,6 +29,6 @@ export const getCountriesBySet = memoize((set: RegionSet) => {
 export function prefersDarkMode() {
   return (
     window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
+    window.matchMedia("(prefers-color-scheme: dark)").matches
   );
 }

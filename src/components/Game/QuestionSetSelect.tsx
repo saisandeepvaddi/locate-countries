@@ -4,12 +4,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import useGame from '@/hooks/useGame';
-import { getCountriesBySet } from '@/lib/utils';
-import { RegionSet, questionSetAtom } from '@/state/game';
+} from "@/components/ui/select";
+import useGame from "@/hooks/useGame";
+import { getCountriesBySet } from "@/lib/utils";
+import { RegionSet, questionSetAtom } from "@/state/game";
 
-import { useAtom } from 'jotai';
+import { useAtom } from "jotai";
 
 function QuestionSetSelect() {
   const regions = Object.values(RegionSet);
@@ -24,10 +24,10 @@ function QuestionSetSelect() {
         resetGame();
       }}
     >
-      <SelectTrigger className='w-[280px] bg-slate-950 text-white'>
-        <SelectValue placeholder='Set' />
+      <SelectTrigger className="w-[280px] bg-slate-950 text-white">
+        <SelectValue placeholder="Set" />
       </SelectTrigger>
-      <SelectContent className='bg-slate-950 text-white'>
+      <SelectContent className="bg-slate-950 text-white">
         {regions.map((region) => (
           <SelectItem key={region} value={region}>
             {region.charAt(0).toUpperCase() + region.slice(1)} (

@@ -5,13 +5,13 @@ import {
   errorCountriesAtom,
   isPlayingAtom,
   maxAttemptsAtom,
-} from '@/state/game';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+} from "@/state/game";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 // import { LngLatLike } from 'mapbox-gl';
-import { useCallback, useRef, useState } from 'react';
-import { LngLatLike, MapRef } from 'react-map-gl';
-import { toast } from './use-toast';
-import useCountries from './useCountries';
+import { useCallback, useRef, useState } from "react";
+import { LngLatLike, MapRef } from "react-map-gl";
+import { toast } from "./use-toast";
+import useCountries from "./useCountries";
 
 function useGame() {
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom);
@@ -29,7 +29,7 @@ function useGame() {
 
   const mapRef = useRef<MapRef>(null);
   const [lastClickedCountry, setLastClickedCountry] = useState<string | null>(
-    null
+    null,
   );
   const setMapRef = useCallback((ref: MapRef) => {
     mapRef.current = ref;
@@ -73,16 +73,16 @@ function useGame() {
 
   const moveToCountry = useCallback(() => {
     if (!questionLocation) {
-      console.error('No country selected');
+      console.error("No country selected");
       return;
     }
     const map = mapRef?.current?.getMap?.();
     if (!map) {
-      console.error('No map found');
+      console.error("No map found");
       return;
     }
     const countryData = Object.values(countries).find(
-      (c) => c.iso_3166_1 === questionLocation.iso_3166_1
+      (c) => c.iso_3166_1 === questionLocation.iso_3166_1,
     );
 
     if (countryData && map) {
@@ -102,15 +102,15 @@ function useGame() {
   const checkAnswer = useCallback(
     (clickedCountry: string) => {
       if (!questionLocation) {
-        console.error('No country selected');
+        console.error("No country selected");
         return;
       }
 
       if (clickedCountry === questionLocation.iso_3166_1) {
         toast({
-          title: 'Correct!',
-          description: 'You found the country!',
-          variant: 'default',
+          title: "Correct!",
+          description: "You found the country!",
+          variant: "default",
         });
 
         setCorrectCountries((prev) => {
@@ -128,15 +128,15 @@ function useGame() {
         const nextAttempts = attempts + 1;
         setAttempts(nextAttempts);
         toast({
-          title: 'Incorrect!',
-          description: 'Try again!',
-          variant: 'destructive',
+          title: "Incorrect!",
+          description: "Try again!",
+          variant: "destructive",
         });
         if (nextAttempts >= maxAttempts) {
           toast({
-            title: 'Incorrect!',
-            description: 'Moving to the correct country...',
-            variant: 'destructive',
+            title: "Incorrect!",
+            description: "Moving to the correct country...",
+            variant: "destructive",
           });
           moveToCountry();
           setErrorCountries((prev) => {
@@ -161,19 +161,19 @@ function useGame() {
       attempts,
       moveToCountry,
       setErrorCountries,
-    ]
+    ],
   );
 
   const onCountryClick = useCallback(
     (countryProps: CountryProperties) => {
       if (!countryProps) {
-        console.error('No country props');
+        console.error("No country props");
         return;
       }
       setLastClickedCountry(countryProps.iso_3166_1);
       checkAnswer(countryProps.iso_3166_1);
     },
-    [checkAnswer]
+    [checkAnswer],
   );
 
   return {

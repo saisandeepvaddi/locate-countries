@@ -1,35 +1,35 @@
-'use client';
-import useCountries from '@/hooks/useCountries';
-import useGame from '@/hooks/useGame';
-import { MAX_FREE_LOADS } from '@/lib/constants';
-import { CountryPopupInfo } from '@/lib/types';
+"use client";
+import useCountries from "@/hooks/useCountries";
+import useGame from "@/hooks/useGame";
+import { MAX_FREE_LOADS } from "@/lib/constants";
+import { CountryPopupInfo } from "@/lib/types";
 import {
   lastUsedDateAtom,
   mapboxApiKeyAtom,
   pageLoadCountTodayAtom,
-} from '@/state/settings';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useAtomCallback } from 'jotai/utils';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { useCallback, useState } from 'react';
-import { Map, MapMouseEvent } from 'react-map-gl';
+} from "@/state/settings";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomCallback } from "jotai/utils";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { useCallback, useState } from "react";
+import { Map, MapMouseEvent } from "react-map-gl";
 import {
   clickedCountryPropsAtom,
   hoveredCountryIdAtom,
   isPlayingAtom,
   playedCountriesAtom,
-} from '../../state/game';
-import MapboxKeyInput from '../Settings/MapboxKeyInput';
+} from "../../state/game";
+import MapboxKeyInput from "../Settings/MapboxKeyInput";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '../ui/dialog';
-import CountryBoundariesLayer from './CountryBoundariesLayer';
-import CountryPopup from './Markers/CountryPopup';
-import PlayedCountryMarkers from './PlayedCountryMarkers';
+} from "../ui/dialog";
+import CountryBoundariesLayer from "./CountryBoundariesLayer";
+import CountryPopup from "./Markers/CountryPopup";
+import PlayedCountryMarkers from "./PlayedCountryMarkers";
 
 // import { prepareData } from '@/lib/prepare';
 // window.v = prepareData();
@@ -42,7 +42,7 @@ const initialViewState = {
   pitch: 0,
 };
 
-const mapContainerStyle = { width: '100vw', height: '100vh' };
+const mapContainerStyle = { width: "100vw", height: "100vh" };
 export function MapContainer() {
   const isPlaying = useAtomValue(isPlayingAtom);
   const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
@@ -61,17 +61,17 @@ export function MapContainer() {
       const features = event.features;
       if (!features || features.length === 0) {
         setHoveredCountryId(null);
-        map.getCanvasContainer().style.cursor = '';
+        map.getCanvasContainer().style.cursor = "";
         return;
       }
       const newHoveredCountry = features[0].properties?.iso_3166_1;
 
       if (newHoveredCountry !== lastHoveredCountryId) {
-        map.getCanvasContainer().style.cursor = 'pointer';
+        map.getCanvasContainer().style.cursor = "pointer";
         setHoveredCountryId(newHoveredCountry);
       }
     },
-    [lastHoveredCountryId, setHoveredCountryId]
+    [lastHoveredCountryId, setHoveredCountryId],
   );
 
   const handleClick = useCallback(
@@ -104,7 +104,7 @@ export function MapContainer() {
       onCountryClick,
       setLastClickedCountry,
       getCountryByIso,
-    ]
+    ],
   );
 
   const handleMapLoad = useAtomCallback((get, set) => {
@@ -123,9 +123,9 @@ export function MapContainer() {
 
   const apikey = mapboxApiKey
     ? mapboxApiKey
-    : withinFreeLoads || import.meta.env.MODE === 'development'
-    ? freeAPIKey
-    : null;
+    : withinFreeLoads || import.meta.env.MODE === "development"
+      ? freeAPIKey
+      : null;
 
   if (!apikey) {
     return (
@@ -135,12 +135,12 @@ export function MapContainer() {
             <DialogTitle>No Mapbox API key</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            This free app uses{' '}
+            This free app uses{" "}
             <a
-              href='https://www.mapbox.com/'
-              target='_blank'
-              rel='noreferrer noopener'
-              className='underline'
+              href="https://www.mapbox.com/"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="underline"
             >
               Mapbox service
             </a>
@@ -159,7 +159,7 @@ export function MapContainer() {
 
   return (
     <Map
-      id='map'
+      id="map"
       ref={setMapRef}
       initialViewState={initialViewState}
       style={mapContainerStyle}
@@ -169,9 +169,9 @@ export function MapContainer() {
       interactiveLayerIds={
         isPlaying
           ? [
-              'country-boundaries',
-              'country-boundaries-hover',
-              'country-boundaries-incorrect',
+              "country-boundaries",
+              "country-boundaries-hover",
+              "country-boundaries-incorrect",
             ]
           : []
       }
