@@ -34,7 +34,7 @@ function MapboxKeyInput({ onApiKeyChange }: MapboxKeyInputProps): JSX.Element {
       </div>
       <div className="grid grid-cols-4 items-center gap-2">
         <div className="col-span-1"></div>
-        <p className="text-xs text-slate-400 col-span-3 flex items-center gap-2">
+        <p className="col-span-3 flex items-center gap-2 text-xs text-slate-400">
           <InfoIcon className="h-4 w-4" />
           <a
             href="https://www.mapbox.com/account/access-tokens/"

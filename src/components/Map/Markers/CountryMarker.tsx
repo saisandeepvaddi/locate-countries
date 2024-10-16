@@ -30,18 +30,18 @@ function CountryMarker({
       }}
     >
       {type === "fancy" ? (
-        <div className="flex items-center gap-2 p-2 bg-white/50 rounded-lg">
+        <div className="flex items-center gap-2 rounded-lg bg-white/50 p-2">
           <img
             alt={country.name}
             src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${country.iso_3166_1}.svg`}
-            className="h-[20px] w-[30px] border-white border-1 rounded-sm"
+            className="border-1 h-[20px] w-[30px] rounded-sm border-white"
           />
-          <span className="text-xs font-bold bg-black text-white px-2 py-1 rounded-lg">
+          <span className="rounded-lg bg-black px-2 py-1 text-xs font-bold text-white">
             {country.iso_3166_1}
           </span>
         </div>
       ) : (
-        <div className="px-2 py-[1/2] rounded-sm bg-black/50 text-white font-semibold">
+        <div className="rounded-sm bg-black/50 px-2 py-[1/2] font-semibold text-white">
           {countryIso}
         </div>
       )}

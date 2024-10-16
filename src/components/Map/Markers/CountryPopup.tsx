@@ -17,7 +17,7 @@ function CountryPopup({ popup, onClose }: CountryPopupProps) {
       latitude={_latitude}
       longitude={_longitude}
       onClose={onClose}
-      className="p-2 rounded-lg"
+      className="rounded-lg p-2"
       closeOnClick={false}
       closeButton
       anchor="bottom"
@@ -25,11 +25,11 @@ function CountryPopup({ popup, onClose }: CountryPopupProps) {
         maxWidth: "200px",
       }}
     >
-      <p className="text-lg flex gap-1 items-center">
+      <p className="flex items-center gap-1 text-lg">
         <img
           alt={popup.country.name}
           src={`https://purecatamphetamine.github.io/country-flag-icons/3x2/${popup.country.iso_3166_1}.svg`}
-          className="h-[20px] w-[30px] border-white border-1 rounded-sm"
+          className="border-1 h-[20px] w-[30px] rounded-sm border-white"
         />
         <span className="font-bold">{popup.country.name}</span>
         <span className="text-sm text-slate-400">
