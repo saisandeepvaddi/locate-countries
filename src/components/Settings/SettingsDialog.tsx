@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Theme } from "@/lib/themes";
 import { themeAtom } from "@/state/settings";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useAtom } from "jotai";
 import { Laptop, Moon, Settings, Sun } from "lucide-react";
 import MapboxKeyInput from "./MapboxKeyInput";
@@ -72,6 +73,22 @@ export default function SettingsDialog() {
             </Select>
           </div>
           <MapboxKeyInput />
+          <div className="v-center">
+            <Button
+              id="github"
+              variant="outline"
+              className="w-full gap-2"
+              onClick={() =>
+                window.open(
+                  "https://github.com/saisandeepvaddi/locate-countries",
+                  "_blank",
+                )
+              }
+            >
+              <GitHubLogoIcon className="h-4 w-4" />
+              View on GitHub
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
