@@ -13,9 +13,9 @@ function PlayButton() {
       className="flex gap-2"
     >
       {isPlaying ? (
-        <PauseIcon className="w-4 h-4" />
+        <PauseIcon className="h-4 w-4" />
       ) : (
-        <PlayIcon className="w-4 h-4" />
+        <PlayIcon className="h-4 w-4" />
       )}
       {isPlaying ? "Pause" : "Play"}
     </Button>

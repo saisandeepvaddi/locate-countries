@@ -24,7 +24,7 @@ function QuestionSetSelect() {
         resetGame();
       }}
     >
-      <SelectTrigger className="w-[280px] bg-slate-950 text-white">
+      <SelectTrigger className="bg-slate-950 text-white sm:w-[280px]">
         <SelectValue placeholder="Set" />
       </SelectTrigger>
       <SelectContent className="bg-slate-950 text-white">
