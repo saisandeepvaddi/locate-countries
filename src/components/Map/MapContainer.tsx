@@ -13,12 +13,7 @@ import { useAtomCallback } from "jotai/utils";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useCallback, useState } from "react";
 import { Map, MapMouseEvent } from "react-map-gl";
-import {
-  CountryProperties,
-  gameStateAtom,
-  hoveredCountryIdAtom,
-  playedCountriesAtom,
-} from "../../state/game";
+import { hoveredCountryIdAtom } from "../../state/game";
 import MapboxKeyInput from "../Settings/MapboxKeyInput";
 import {
   Dialog,
@@ -44,18 +39,11 @@ const initialViewState = {
 
 const mapContainerStyle = { width: "100vw", height: "100vh" };
 export function MapContainer() {
-  const [gameState, setGameState] = useAtom(gameStateAtom);
-  const isPlaying = gameState.isPlaying;
+  const { playedCountries, isPlaying } = useGame();
 
-  const setClickedCountryProperties = (
-    countryProps: CountryProperties | null,
-  ) => {
-    setGameState({ ...gameState, clickedCountryProps: countryProps });
-  };
   const [lastHoveredCountryId, setHoveredCountryId] =
     useAtom(hoveredCountryIdAtom);
   const { onCountryClick, setMapRef, setLastClickedCountry } = useGame();
-  const playedCountries = useAtomValue(playedCountriesAtom);
   const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);
   const mapboxApiKey = useAtomValue(mapboxApiKeyAtom);
   const pageLoadCountToday = useAtomValue(pageLoadCountTodayAtom);
@@ -86,7 +74,7 @@ export function MapContainer() {
     (event: MapMouseEvent) => {
       if (!event.features || event.features.length === 0) {
         setPopupInfo(null);
-        setClickedCountryProperties(null);
+        // setClickedCountryProperties(null);
         return;
       }
 
@@ -94,7 +82,7 @@ export function MapContainer() {
       if (!clickedCountryIso) {
         return;
       }
-      setClickedCountryProperties(event.features[0].properties);
+      // setClickedCountryProperties(event.features[0].properties);
       const isPlayed = playedCountries.includes(clickedCountryIso);
       if (!isPlayed) {
         onCountryClick(event.features[0].properties);
@@ -107,7 +95,7 @@ export function MapContainer() {
       setLastClickedCountry(event.features[0].properties?.iso_3166_1 ?? null);
     },
     [
-      setClickedCountryProperties,
+      // setClickedCountryProperties,
       playedCountries,
       onCountryClick,
       setLastClickedCountry,
@@ -172,7 +160,6 @@ export function MapContainer() {
       initialViewState={initialViewState}
       style={mapContainerStyle}
       mapboxAccessToken={apikey}
-      reuseMaps
       interactiveLayerIds={
         isPlaying
           ? [

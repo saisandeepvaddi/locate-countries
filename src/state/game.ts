@@ -27,7 +27,6 @@ export interface GameState {
   correctCountries: string[];
   errorCountries: string[];
   questionSet: RegionSet;
-  clickedCountryProps: CountryProperties | null;
 }
 
 const initialGameState: GameState = {
@@ -39,14 +38,8 @@ const initialGameState: GameState = {
   correctCountries: [],
   errorCountries: [],
   questionSet: RegionSet.ALL,
-  clickedCountryProps: null,
 };
 
 export const hoveredCountryIdAtom = atom<string | null>(null);
 
 export const gameStateAtom = atom<GameState>(initialGameState);
-
-export const playedCountriesAtom = atom((get) => {
-  const gameState = get(gameStateAtom);
-  return [...gameState.correctCountries, ...gameState.errorCountries];
-});

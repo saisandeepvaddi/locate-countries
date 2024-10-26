@@ -116,7 +116,7 @@ function useGame() {
           variant: "default",
         });
         nextState.countryInQuestion = getRandomCountry(nextState);
-      } else if (nextState.attempts < gameState.maxAttempts) {
+      } else if (nextState.attempts < nextState.maxAttempts) {
         nextState.attempts += 1;
         toast({
           title: "Incorrect!",
@@ -127,6 +127,11 @@ function useGame() {
         nextState.errorCountries.push(countryInQuestion.iso_3166_1);
         nextState.attempts = 0;
         nextState.countryInQuestion = getRandomCountry(nextState);
+        toast({
+          title: "Incorrect!",
+          description: "Moving to next country",
+          variant: "destructive",
+        });
         moveToCountry(countryInQuestion as Country);
       }
       const isGameOver =
@@ -137,8 +142,7 @@ function useGame() {
     },
     [
       countryInQuestion,
-      gameState.attempts,
-      gameState.maxAttempts,
+      gameState,
       selectRandomCountry,
       moveToCountry,
       setGameState,
@@ -152,10 +156,7 @@ function useGame() {
         return;
       }
       setLastClickedCountry(countryProps.iso_3166_1);
-      setGameState((state) => ({
-        ...state,
-        clickedCountryProps: countryProps,
-      }));
+
       checkAnswer(countryProps.iso_3166_1);
     },
     [checkAnswer, setGameState],

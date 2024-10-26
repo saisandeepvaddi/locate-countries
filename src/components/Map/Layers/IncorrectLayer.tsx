@@ -9,6 +9,7 @@ function IncorrectLayer(): JSX.Element {
   const selectedTheme = useAtomValue(themeAtom);
   const errorCountries = useAtomValue(gameStateAtom).errorCountries;
   const layerTheme = layerThemes[selectedTheme] ?? layerThemes.light;
+
   return (
     <Layer
       id="country-boundaries-incorrect"
