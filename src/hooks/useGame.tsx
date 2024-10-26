@@ -1,8 +1,8 @@
-import { countries } from "@/lib/countries";
+import { countries, Country } from "@/lib/countries";
 import { getCountriesBySet } from "@/lib/utils";
-import { CountryProperties, gameStateAtom } from "@/state/game";
+import { CountryProperties, GameState, gameStateAtom } from "@/state/game";
 import { useAtom } from "jotai";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { LngLatLike, MapRef } from "react-map-gl";
 import { toast } from "./use-toast";
 
@@ -11,13 +11,23 @@ function useGame() {
   const { questionSet, countryInQuestion, correctCountries, errorCountries } =
     gameState;
 
-  const selectRandomCountry = useCallback(() => {
-    const playedCountries = [...correctCountries, ...errorCountries];
-    const availableCountries = getCountriesBySet(questionSet).filter(
+  const playedCountries = [...correctCountries, ...errorCountries];
+
+  const getRandomCountry = useCallback((state: GameState = gameState) => {
+    const playedCountries = [
+      ...state.correctCountries,
+      ...state.errorCountries,
+    ];
+    const availableCountries = getCountriesBySet(state.questionSet).filter(
       (country) => !playedCountries.includes(country.iso_3166_1),
     );
     const randomCountry =
       availableCountries[Math.floor(Math.random() * availableCountries.length)];
+    return randomCountry;
+  }, []);
+
+  const selectRandomCountry = useCallback(() => {
+    const randomCountry = getRandomCountry(gameState);
     setGameState((state) => ({ ...state, countryInQuestion: randomCountry }));
   }, [setGameState]);
 
@@ -74,33 +84,38 @@ function useGame() {
     }
   };
 
-  const moveToCountry = useCallback(() => {
-    if (!countryInQuestion) {
-      console.error("No country selected");
-      return;
-    }
-    const map = mapRef?.current?.getMap?.();
-    if (!map) {
-      console.error("No map found");
-      return;
-    }
-    const countryData = Object.values(countries).find(
-      (c) => c.iso_3166_1 === countryInQuestion.iso_3166_1,
-    );
+  const countriesInSet = useMemo(
+    () => getCountriesBySet(questionSet),
+    [questionSet],
+  );
 
-    if (countryData && map) {
-      const [minLng, minLat, maxLng, maxLat] = countryData.bbox;
-      const center = [
-        (minLng + maxLng) / 2,
-        (minLat + maxLat) / 2,
-      ] as LngLatLike;
-      map.flyTo({
-        center,
-        zoom: map.getZoom(),
-        essential: true,
-      });
-    }
-  }, [countryInQuestion, countries]);
+  const moveToCountry = useCallback(
+    (country: Country) => {
+      if (!country) {
+        console.error("No country selected");
+        return;
+      }
+      const map = mapRef?.current?.getMap?.();
+      if (!map) {
+        console.error("No map found");
+        return;
+      }
+
+      if (country && map) {
+        const [minLng, minLat, maxLng, maxLat] = country.bbox;
+        const center = [
+          (minLng + maxLng) / 2,
+          (minLat + maxLat) / 2,
+        ] as LngLatLike;
+        map.flyTo({
+          center,
+          zoom: map.getZoom(),
+          essential: true,
+        });
+      }
+    },
+    [countryInQuestion, countries],
+  );
 
   const checkAnswer = useCallback(
     (clickedCountry: string) => {
@@ -109,57 +124,37 @@ function useGame() {
         return;
       }
 
-      if (clickedCountry === countryInQuestion.iso_3166_1) {
+      const isCorrect = clickedCountry === countryInQuestion.iso_3166_1;
+
+      const nextState = { ...gameState };
+      nextState.attempts = nextState.attempts + 1;
+      if (isCorrect) {
+        nextState.correctCountries.push(countryInQuestion.iso_3166_1);
+        nextState.attempts = 0;
         toast({
           title: "Correct!",
           description: "You found the country!",
           variant: "default",
         });
-
-        setGameState((state) => ({
-          ...state,
-          correctCountries: [
-            ...state.correctCountries,
-            countryInQuestion.iso_3166_1,
-          ],
-          attempts: 0,
-        }));
-        setTimeout(() => {
-          selectRandomCountry();
-        }, 0);
-      } else {
-        const nextAttempts = gameState.attempts + 1;
-        setGameState((state) => ({
-          ...state,
-          attempts: nextAttempts,
-        }));
-
+        nextState.countryInQuestion = getRandomCountry(nextState);
+      } else if (nextState.attempts < gameState.maxAttempts) {
+        nextState.attempts += 1;
         toast({
           title: "Incorrect!",
           description: "Try again!",
           variant: "destructive",
         });
-
-        if (nextAttempts >= gameState.maxAttempts) {
-          toast({
-            title: "Incorrect!",
-            description: "Moving to the correct country...",
-            variant: "destructive",
-          });
-          moveToCountry();
-          setGameState((state) => ({
-            ...state,
-            errorCountries: [
-              ...state.errorCountries,
-              countryInQuestion.iso_3166_1,
-            ],
-            attempts: 0,
-          }));
-          setTimeout(() => {
-            selectRandomCountry();
-          }, 0);
-        }
+      } else {
+        nextState.errorCountries.push(countryInQuestion.iso_3166_1);
+        nextState.attempts = 0;
+        nextState.countryInQuestion = getRandomCountry(nextState);
+        moveToCountry(countryInQuestion as Country);
       }
+      const isGameOver =
+        nextState.correctCountries.length + nextState.errorCountries.length ===
+        countriesInSet.length;
+      nextState.isPlaying = !isGameOver;
+      setGameState(nextState);
     },
     [
       countryInQuestion,
@@ -186,8 +181,6 @@ function useGame() {
     },
     [checkAnswer, setGameState],
   );
-
-  const playedCountries = [...correctCountries, ...errorCountries];
 
   return {
     ...gameState,

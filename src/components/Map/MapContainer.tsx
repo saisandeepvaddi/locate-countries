@@ -45,6 +45,7 @@ const mapContainerStyle = { width: "100vw", height: "100vh" };
 export function MapContainer() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
   const isPlaying = gameState.isPlaying;
+
   const setClickedCountryProperties = (
     countryProps: CountryProperties | null,
   ) => {
@@ -196,7 +197,6 @@ export function MapContainer() {
         />
       )}
       <PlayedCountryMarkers countryISOs={playedCountries} />
-
       <CountryBoundariesLayer />
     </Map>
   );

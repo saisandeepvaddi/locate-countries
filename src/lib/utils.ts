@@ -14,17 +14,31 @@ export function getCoords(country: Country) {
   return { latitude, longitude };
 }
 
-export const getCountriesBySet = memoize((set: RegionSet) => {
-  const countryObjects = Object.values(countries);
+export const getCountriesBySet = memoize(
+  (set: RegionSet, maxCount: number = 3) => {
+    const countryObjects = Object.values(countries);
 
-  if (set === RegionSet.ALL) {
-    return countryObjects.filter((country) => country.region !== "Antarctica");
-  }
+    let filteredCountries = [];
+    if (set === RegionSet.ALL) {
+      filteredCountries = countryObjects.filter(
+        (country) => country.region !== "Antarctica",
+      );
+      if (maxCount) {
+        return filteredCountries.slice(0, maxCount);
+      }
+    }
 
-  return countryObjects.filter((country) => {
-    return country.region.toLowerCase() === set.toLowerCase();
-  });
-});
+    filteredCountries = countryObjects.filter((country) => {
+      return country.region.toLowerCase() === set.toLowerCase();
+    });
+
+    if (maxCount) {
+      return filteredCountries.slice(0, maxCount);
+    }
+
+    return filteredCountries;
+  },
+);
 
 export function prefersDarkMode() {
   return (
