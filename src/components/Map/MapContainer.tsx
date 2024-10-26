@@ -8,15 +8,14 @@ import {
   mapboxApiKeyAtom,
   pageLoadCountTodayAtom,
 } from "@/state/settings";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useAtomCallback } from "jotai/utils";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useCallback, useState } from "react";
 import { Map, MapMouseEvent } from "react-map-gl";
 import {
-  clickedCountryPropsAtom,
-  hoveredCountryIdAtom,
-  isPlayingAtom,
+  CountryProperties,
+  gameStateAtom,
   playedCountriesAtom,
 } from "../../state/game";
 import MapboxKeyInput from "../Settings/MapboxKeyInput";
@@ -44,10 +43,17 @@ const initialViewState = {
 
 const mapContainerStyle = { width: "100vw", height: "100vh" };
 export function MapContainer() {
-  const isPlaying = useAtomValue(isPlayingAtom);
-  const setClickedCountryProperties = useSetAtom(clickedCountryPropsAtom);
-  const [lastHoveredCountryId, setHoveredCountryId] =
-    useAtom(hoveredCountryIdAtom);
+  const [gameState, setGameState] = useAtom(gameStateAtom);
+  const isPlaying = gameState.isPlaying;
+  const setClickedCountryProperties = (
+    countryProps: CountryProperties | null,
+  ) => {
+    setGameState({ ...gameState, clickedCountryProps: countryProps });
+  };
+  const lastHoveredCountryId = gameState.hoveredCountryId;
+  const setHoveredCountryId = (countryId: string | null) => {
+    setGameState({ ...gameState, hoveredCountryId: countryId });
+  };
   const { onCountryClick, setMapRef, setLastClickedCountry } = useGame();
   const playedCountries = useAtomValue(playedCountriesAtom);
   const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);

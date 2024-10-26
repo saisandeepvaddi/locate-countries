@@ -7,20 +7,21 @@ import {
 } from "@/components/ui/select";
 import useGame from "@/hooks/useGame";
 import { getCountriesBySet } from "@/lib/utils";
-import { RegionSet, questionSetAtom } from "@/state/game";
+import { gameStateAtom, RegionSet } from "@/state/game";
 
 import { useAtom } from "jotai";
 
 function QuestionSetSelect() {
   const regions = Object.values(RegionSet);
   const { resetGame } = useGame();
-  const [questionSet, setQuestionSet] = useAtom(questionSetAtom);
+  const [gameState, setGameState] = useAtom(gameStateAtom);
+  const questionSet = gameState.questionSet;
 
   return (
     <Select
       value={questionSet}
       onValueChange={(value) => {
-        setQuestionSet(value as RegionSet);
+        setGameState({ ...gameState, questionSet: value as RegionSet });
         resetGame();
       }}
     >

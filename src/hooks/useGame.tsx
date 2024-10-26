@@ -1,22 +1,12 @@
-import {
-  attemptsAtom,
-  correctCountriesAtom,
-  CountryProperties,
-  errorCountriesAtom,
-  isPlayingAtom,
-  maxAttemptsAtom,
-} from "@/state/game";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-// import { LngLatLike } from 'mapbox-gl';
+import { CountryProperties, gameStateAtom } from "@/state/game";
+import { useAtom } from "jotai";
 import { useCallback, useRef, useState } from "react";
 import { LngLatLike, MapRef } from "react-map-gl";
 import { toast } from "./use-toast";
 import useCountries from "./useCountries";
 
 function useGame() {
-  const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom);
-  const [attempts, setAttempts] = useAtom(attemptsAtom);
-  const maxAttempts = useAtomValue(maxAttemptsAtom);
+  const [gameState, setGameState] = useAtom(gameStateAtom);
   const {
     selectRandomCountry,
     questionLocation,
@@ -24,13 +14,12 @@ function useGame() {
     playedCountries,
     countrySet,
   } = useCountries();
-  const setCorrectCountries = useSetAtom(correctCountriesAtom);
-  const setErrorCountries = useSetAtom(errorCountriesAtom);
 
   const mapRef = useRef<MapRef>(null);
   const [lastClickedCountry, setLastClickedCountry] = useState<string | null>(
     null,
   );
+
   const setMapRef = useCallback((ref: MapRef) => {
     mapRef.current = ref;
   }, []);
@@ -38,34 +27,41 @@ function useGame() {
   const getMapRef = useCallback(() => mapRef.current, []);
 
   const resetGame = useCallback(() => {
-    setAttempts(0);
-    setCorrectCountries([]);
-    setErrorCountries([]);
+    setGameState((state) => ({
+      ...state,
+      attempts: 0,
+      correctCountries: [],
+      errorCountries: [],
+    }));
     selectRandomCountry();
-  }, [
-    selectRandomCountry,
-    setAttempts,
-    setCorrectCountries,
-    setErrorCountries,
-  ]);
+  }, [selectRandomCountry, setGameState]);
 
   const shuffleQuestion = () => {
     selectRandomCountry();
   };
 
   const toggleGamePlay = () => {
-    setIsPlaying(!isPlaying);
-    if (!isPlaying) {
+    setGameState((state) => ({
+      ...state,
+      isPlaying: !state.isPlaying,
+    }));
+    if (!gameState.isPlaying) {
       resetGame();
     }
   };
 
   const startGame = () => {
-    setIsPlaying(true);
+    setGameState((state) => ({
+      ...state,
+      isPlaying: true,
+    }));
   };
 
   const endGame = (autoRestart: boolean = false) => {
-    setIsPlaying(false);
+    setGameState((state) => ({
+      ...state,
+      isPlaying: false,
+    }));
     if (autoRestart) {
       resetGame();
     }
@@ -97,7 +93,7 @@ function useGame() {
         essential: true,
       });
     }
-  }, [questionLocation, mapRef, countries]);
+  }, [questionLocation, countries]);
 
   const checkAnswer = useCallback(
     (clickedCountry: string) => {
@@ -113,54 +109,58 @@ function useGame() {
           variant: "default",
         });
 
-        setCorrectCountries((prev) => {
-          const updatedCorrectCountries = [
-            ...prev,
+        setGameState((state) => ({
+          ...state,
+          correctCountries: [
+            ...state.correctCountries,
             questionLocation.iso_3166_1,
-          ];
-          setTimeout(() => {
-            selectRandomCountry();
-            setAttempts(0);
-          }, 0);
-          return updatedCorrectCountries;
-        });
+          ],
+          attempts: 0,
+        }));
+        setTimeout(() => {
+          selectRandomCountry();
+        }, 0);
       } else {
-        const nextAttempts = attempts + 1;
-        setAttempts(nextAttempts);
+        const nextAttempts = gameState.attempts + 1;
+        setGameState((state) => ({
+          ...state,
+          attempts: nextAttempts,
+        }));
+
         toast({
           title: "Incorrect!",
           description: "Try again!",
           variant: "destructive",
         });
-        if (nextAttempts >= maxAttempts) {
+
+        if (nextAttempts >= gameState.maxAttempts) {
           toast({
             title: "Incorrect!",
             description: "Moving to the correct country...",
             variant: "destructive",
           });
           moveToCountry();
-          setErrorCountries((prev) => {
-            const updatedErrorCountries = [
-              ...prev,
+          setGameState((state) => ({
+            ...state,
+            errorCountries: [
+              ...state.errorCountries,
               questionLocation.iso_3166_1,
-            ];
-            setTimeout(() => {
-              selectRandomCountry();
-              setAttempts(0);
-            }, 0);
-            return updatedErrorCountries;
-          });
+            ],
+            attempts: 0,
+          }));
+          setTimeout(() => {
+            selectRandomCountry();
+          }, 0);
         }
       }
     },
     [
       questionLocation,
+      gameState.attempts,
+      gameState.maxAttempts,
       selectRandomCountry,
-      setAttempts,
-      setCorrectCountries,
-      attempts,
       moveToCountry,
-      setErrorCountries,
+      setGameState,
     ],
   );
 
@@ -171,20 +171,24 @@ function useGame() {
         return;
       }
       setLastClickedCountry(countryProps.iso_3166_1);
+      setGameState((state) => ({
+        ...state,
+        clickedCountryProps: countryProps,
+      }));
       checkAnswer(countryProps.iso_3166_1);
     },
-    [checkAnswer],
+    [checkAnswer, setGameState],
   );
 
   return {
-    attempts,
-    isPlaying,
-    setAttempts,
+    ...gameState,
+    setAttempts: (attempts: number) =>
+      setGameState((state) => ({ ...state, attempts })),
     resetGame,
     toggleGamePlay,
     startGame,
     endGame,
-    questionLocation: questionLocation,
+    questionLocation,
     shuffleQuestion,
     mapRef,
     getMapRef,

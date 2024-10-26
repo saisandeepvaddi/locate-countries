@@ -1,5 +1,5 @@
 import { layerThemes } from "@/lib/themes";
-import { hoveredCountryIdAtom } from "@/state/game";
+import { gameStateAtom } from "@/state/game";
 import { themeAtom } from "@/state/settings";
 import { useAtomValue } from "jotai";
 import { Layer, Source } from "react-map-gl";
@@ -10,7 +10,8 @@ import IncorrectLayer from "./Layers/IncorrectLayer";
 function CountryBoundariesLayer() {
   const selectedTheme = useAtomValue(themeAtom);
   const layerTheme = layerThemes[selectedTheme] ?? layerThemes.light;
-  const hoveredCountryId = useAtomValue(hoveredCountryIdAtom);
+  const gameState = useAtomValue(gameStateAtom);
+  const hoveredCountryId = gameState.hoveredCountryId;
   return (
     <Source
       id="country-boundaries"

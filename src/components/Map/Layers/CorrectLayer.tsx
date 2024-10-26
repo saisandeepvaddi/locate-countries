@@ -1,5 +1,5 @@
 import { layerThemes } from "@/lib/themes";
-import { correctCountriesAtom } from "@/state/game";
+import { gameStateAtom } from "@/state/game";
 import { themeAtom } from "@/state/settings";
 import { useAtomValue } from "jotai";
 import { JSX } from "react";
@@ -7,7 +7,8 @@ import { Layer } from "react-map-gl";
 
 function CorrectLayer(): JSX.Element {
   const selectedTheme = useAtomValue(themeAtom);
-  const correctCountries = useAtomValue(correctCountriesAtom);
+  const gameState = useAtomValue(gameStateAtom);
+  const correctCountries = gameState.correctCountries;
   const layerTheme = layerThemes[selectedTheme] ?? layerThemes.light;
   return (
     <Layer

@@ -1,16 +1,15 @@
 import { countries } from "@/lib/countries";
 import {
   availableCountriesForActiveSet,
-  countryInQuestionAtom,
+  gameStateAtom,
   playedCountriesAtom,
 } from "@/state/game";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback } from "react";
 
 function useCountries() {
-  const [questionLocation, setQuestionLocation] = useAtom(
-    countryInQuestionAtom,
-  );
+  const [gameState, setGameState] = useAtom(gameStateAtom);
+  const questionLocation = gameState.countryInQuestion;
 
   const playedCountries = useAtomValue(playedCountriesAtom);
   const countrySet = useAtomValue(availableCountriesForActiveSet);
@@ -21,8 +20,8 @@ function useCountries() {
     );
     const randomCountry =
       availableCountries[Math.floor(Math.random() * availableCountries.length)];
-    setQuestionLocation(randomCountry);
-  }, [countrySet, setQuestionLocation, playedCountries]);
+    setGameState({ ...gameState, countryInQuestion: randomCountry });
+  }, [countrySet, setGameState, playedCountries]);
 
   const getCountryByIso = useCallback(
     (iso: string) => {

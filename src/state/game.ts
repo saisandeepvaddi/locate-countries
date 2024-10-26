@@ -1,32 +1,16 @@
 import { getCountriesBySet } from "@/lib/utils";
 import { atom } from "jotai";
+import { GeoJSONFeature } from "mapbox-gl";
+
 import { Country } from "../lib/countries";
 
-export type CountryProperties = any; // GeoJSONFeature['properties'];
+export type CountryProperties = GeoJSONFeature["properties"];
 
 export type CountryQuestion = {
   name: string;
   iso_3166_1: string;
   bbox: [number, number, number, number];
 };
-
-// export const hoveredCountryPropsAtom = atom<CountryProperties | null>(null);
-export const clickedCountryPropsAtom = atom<CountryProperties | null>(null);
-export const hoveredCountryIdAtom = atom<string | null>(null);
-
-export const isPlayingAtom = atom<boolean>(false);
-export const attemptsAtom = atom<number>(0);
-export const maxAttemptsAtom = atom<number>(1);
-export const showMarkerOnlyOnClickAtom = atom<boolean>(true);
-
-export const countryInQuestionAtom = atom<CountryQuestion | null>(null);
-
-export const correctCountriesAtom = atom<string[]>([]);
-export const errorCountriesAtom = atom<string[]>([]);
-
-export const playedCountriesAtom = atom<string[]>((get) => {
-  return [...get(correctCountriesAtom), ...get(errorCountriesAtom)];
-});
 
 export enum RegionSet {
   ALL = "ALL",
@@ -37,9 +21,40 @@ export enum RegionSet {
   OCEANIA = "OCEANIA",
 }
 
-export const questionSetAtom = atom<RegionSet>(RegionSet.ALL);
+export interface GameState {
+  isPlaying: boolean;
+  attempts: number;
+  maxAttempts: number;
+  showMarkerOnlyOnClick: boolean;
+  countryInQuestion: CountryQuestion | null;
+  correctCountries: string[];
+  errorCountries: string[];
+  questionSet: RegionSet;
+  hoveredCountryId: string | null;
+  clickedCountryProps: CountryProperties | null;
+}
+
+const initialGameState: GameState = {
+  isPlaying: false,
+  attempts: 0,
+  maxAttempts: 1,
+  showMarkerOnlyOnClick: true,
+  countryInQuestion: null,
+  correctCountries: [],
+  errorCountries: [],
+  questionSet: RegionSet.ALL,
+  hoveredCountryId: null,
+  clickedCountryProps: null,
+};
+
+export const gameStateAtom = atom<GameState>(initialGameState);
+
+export const playedCountriesAtom = atom((get) => {
+  const gameState = get(gameStateAtom);
+  return [...gameState.correctCountries, ...gameState.errorCountries];
+});
 
 export const availableCountriesForActiveSet = atom<Country[]>((get) => {
-  const set = get(questionSetAtom);
-  return getCountriesBySet(set);
+  const gameState = get(gameStateAtom);
+  return getCountriesBySet(gameState.questionSet);
 });
