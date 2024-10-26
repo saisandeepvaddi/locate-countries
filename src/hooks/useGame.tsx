@@ -108,7 +108,11 @@ function useGame() {
       const nextState = { ...gameState };
       nextState.attempts = nextState.attempts + 1;
       if (isCorrect) {
-        nextState.correctCountries.push(countryInQuestion.iso_3166_1);
+        nextState.correctCountries = [
+          ...nextState.correctCountries,
+          countryInQuestion.iso_3166_1,
+        ];
+
         nextState.attempts = 0;
         toast({
           title: "Correct!",
@@ -124,7 +128,10 @@ function useGame() {
           variant: "destructive",
         });
       } else {
-        nextState.errorCountries.push(countryInQuestion.iso_3166_1);
+        nextState.errorCountries = [
+          ...nextState.errorCountries,
+          countryInQuestion.iso_3166_1,
+        ];
         nextState.attempts = 0;
         nextState.countryInQuestion = getRandomCountry(nextState);
         toast({

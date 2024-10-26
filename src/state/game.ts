@@ -1,6 +1,5 @@
 import { atom } from "jotai";
 import { GeoJSONFeature } from "mapbox-gl";
-
 export type CountryProperties = GeoJSONFeature["properties"];
 
 export type CountryQuestion = {
