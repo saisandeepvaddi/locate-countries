@@ -16,6 +16,7 @@ import { Map, MapMouseEvent } from "react-map-gl";
 import {
   CountryProperties,
   gameStateAtom,
+  hoveredCountryIdAtom,
   playedCountriesAtom,
 } from "../../state/game";
 import MapboxKeyInput from "../Settings/MapboxKeyInput";
@@ -51,10 +52,8 @@ export function MapContainer() {
   ) => {
     setGameState({ ...gameState, clickedCountryProps: countryProps });
   };
-  const lastHoveredCountryId = gameState.hoveredCountryId;
-  const setHoveredCountryId = (countryId: string | null) => {
-    setGameState({ ...gameState, hoveredCountryId: countryId });
-  };
+  const [lastHoveredCountryId, setHoveredCountryId] =
+    useAtom(hoveredCountryIdAtom);
   const { onCountryClick, setMapRef, setLastClickedCountry } = useGame();
   const playedCountries = useAtomValue(playedCountriesAtom);
   const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);
@@ -63,6 +62,9 @@ export function MapContainer() {
 
   const onHover = useCallback(
     (event: MapMouseEvent) => {
+      if (!isPlaying) {
+        return;
+      }
       const map = event.target;
       const features = event.features;
       if (!features || features.length === 0) {
@@ -77,7 +79,7 @@ export function MapContainer() {
         setHoveredCountryId(newHoveredCountry);
       }
     },
-    [lastHoveredCountryId, setHoveredCountryId],
+    [lastHoveredCountryId, setHoveredCountryId, isPlaying],
   );
 
   const handleClick = useCallback(
@@ -170,8 +172,7 @@ export function MapContainer() {
       initialViewState={initialViewState}
       style={mapContainerStyle}
       mapboxAccessToken={apikey}
-      // baseApiUrl={`${window.location.origin}/mapbox`}
-      // reuseMaps
+      reuseMaps
       interactiveLayerIds={
         isPlaying
           ? [
@@ -182,7 +183,6 @@ export function MapContainer() {
           : []
       }
       onMouseMove={onHover}
-      // onMouseLeave={onMouseLeave}
       onClick={handleClick}
       onLoad={handleMapLoad}
     >

@@ -52,10 +52,6 @@ function useGame() {
     selectRandomCountry();
   }, [selectRandomCountry, setGameState]);
 
-  const shuffleQuestion = () => {
-    selectRandomCountry();
-  };
-
   const toggleGamePlay = () => {
     const willPlay = !gameState.isPlaying;
     setGameState((state) => ({
@@ -63,23 +59,6 @@ function useGame() {
       isPlaying: willPlay,
     }));
     if (willPlay) {
-      resetGame();
-    }
-  };
-
-  const startGame = () => {
-    setGameState((state) => ({
-      ...state,
-      isPlaying: true,
-    }));
-  };
-
-  const endGame = (autoRestart: boolean = false) => {
-    setGameState((state) => ({
-      ...state,
-      isPlaying: false,
-    }));
-    if (autoRestart) {
       resetGame();
     }
   };
@@ -184,14 +163,9 @@ function useGame() {
 
   return {
     ...gameState,
-    setAttempts: (attempts: number) =>
-      setGameState((state) => ({ ...state, attempts })),
     resetGame,
     toggleGamePlay,
-    startGame,
-    endGame,
     countryInQuestion,
-    shuffleQuestion,
     mapRef,
     getMapRef,
     setMapRef,
@@ -200,8 +174,6 @@ function useGame() {
     availableLocations: getCountriesBySet(questionSet),
     lastClickedCountry,
     setLastClickedCountry,
-    selectRandomCountry,
-    checkAnswer,
   };
 }
 

@@ -7,8 +7,7 @@ import { Layer } from "react-map-gl";
 
 function IncorrectLayer(): JSX.Element {
   const selectedTheme = useAtomValue(themeAtom);
-  const gameState = useAtomValue(gameStateAtom);
-  const errorCountries = gameState.errorCountries;
+  const errorCountries = useAtomValue(gameStateAtom).errorCountries;
   const layerTheme = layerThemes[selectedTheme] ?? layerThemes.light;
   return (
     <Layer

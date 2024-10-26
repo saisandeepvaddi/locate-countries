@@ -1,8 +1,5 @@
-import { getCountriesBySet } from "@/lib/utils";
 import { atom } from "jotai";
 import { GeoJSONFeature } from "mapbox-gl";
-
-import { Country } from "../lib/countries";
 
 export type CountryProperties = GeoJSONFeature["properties"];
 
@@ -30,7 +27,6 @@ export interface GameState {
   correctCountries: string[];
   errorCountries: string[];
   questionSet: RegionSet;
-  hoveredCountryId: string | null;
   clickedCountryProps: CountryProperties | null;
 }
 
@@ -43,18 +39,14 @@ const initialGameState: GameState = {
   correctCountries: [],
   errorCountries: [],
   questionSet: RegionSet.ALL,
-  hoveredCountryId: null,
   clickedCountryProps: null,
 };
+
+export const hoveredCountryIdAtom = atom<string | null>(null);
 
 export const gameStateAtom = atom<GameState>(initialGameState);
 
 export const playedCountriesAtom = atom((get) => {
   const gameState = get(gameStateAtom);
   return [...gameState.correctCountries, ...gameState.errorCountries];
-});
-
-export const availableCountriesForActiveSet = atom<Country[]>((get) => {
-  const gameState = get(gameStateAtom);
-  return getCountriesBySet(gameState.questionSet);
 });
