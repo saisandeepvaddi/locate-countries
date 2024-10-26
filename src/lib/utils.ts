@@ -32,3 +32,7 @@ export function prefersDarkMode() {
     window.matchMedia("(prefers-color-scheme: dark)").matches
   );
 }
+
+export function getCountryByIso(iso: string) {
+  return countries[iso];
+}

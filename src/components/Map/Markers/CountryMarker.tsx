@@ -1,6 +1,5 @@
-import useCountries from "@/hooks/useCountries";
 import { Country } from "@/lib/countries";
-import { getCoords } from "@/lib/utils";
+import { getCoords, getCountryByIso } from "@/lib/utils";
 import { Marker } from "react-map-gl";
 
 interface CountryMarkerProps {
@@ -14,7 +13,6 @@ function CountryMarker({
   onClick,
   type = "normal",
 }: CountryMarkerProps) {
-  const { getCountryByIso } = useCountries();
   const country = getCountryByIso(countryIso);
   if (!country) {
     return null;

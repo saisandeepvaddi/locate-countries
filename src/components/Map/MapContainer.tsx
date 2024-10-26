@@ -1,8 +1,8 @@
 "use client";
-import useCountries from "@/hooks/useCountries";
 import useGame from "@/hooks/useGame";
 import { MAX_FREE_LOADS } from "@/lib/constants";
 import { CountryPopupInfo } from "@/lib/types";
+import { getCountryByIso } from "@/lib/utils";
 import {
   lastUsedDateAtom,
   mapboxApiKeyAtom,
@@ -58,7 +58,6 @@ export function MapContainer() {
   const playedCountries = useAtomValue(playedCountriesAtom);
   const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);
   const mapboxApiKey = useAtomValue(mapboxApiKeyAtom);
-  const { getCountryByIso } = useCountries();
   const pageLoadCountToday = useAtomValue(pageLoadCountTodayAtom);
 
   const onHover = useCallback(

@@ -1,19 +1,25 @@
+import { countries } from "@/lib/countries";
+import { getCountriesBySet } from "@/lib/utils";
 import { CountryProperties, gameStateAtom } from "@/state/game";
 import { useAtom } from "jotai";
 import { useCallback, useRef, useState } from "react";
 import { LngLatLike, MapRef } from "react-map-gl";
 import { toast } from "./use-toast";
-import useCountries from "./useCountries";
 
 function useGame() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
-  const {
-    selectRandomCountry,
-    questionLocation,
-    countries,
-    playedCountries,
-    countrySet,
-  } = useCountries();
+  const { questionSet, countryInQuestion, correctCountries, errorCountries } =
+    gameState;
+
+  const selectRandomCountry = useCallback(() => {
+    const playedCountries = [...correctCountries, ...errorCountries];
+    const availableCountries = getCountriesBySet(questionSet).filter(
+      (country) => !playedCountries.includes(country.iso_3166_1),
+    );
+    const randomCountry =
+      availableCountries[Math.floor(Math.random() * availableCountries.length)];
+    setGameState((state) => ({ ...state, countryInQuestion: randomCountry }));
+  }, [setGameState]);
 
   const mapRef = useRef<MapRef>(null);
   const [lastClickedCountry, setLastClickedCountry] = useState<string | null>(
@@ -41,11 +47,12 @@ function useGame() {
   };
 
   const toggleGamePlay = () => {
+    const willPlay = !gameState.isPlaying;
     setGameState((state) => ({
       ...state,
-      isPlaying: !state.isPlaying,
+      isPlaying: willPlay,
     }));
-    if (!gameState.isPlaying) {
+    if (willPlay) {
       resetGame();
     }
   };
@@ -68,7 +75,7 @@ function useGame() {
   };
 
   const moveToCountry = useCallback(() => {
-    if (!questionLocation) {
+    if (!countryInQuestion) {
       console.error("No country selected");
       return;
     }
@@ -78,7 +85,7 @@ function useGame() {
       return;
     }
     const countryData = Object.values(countries).find(
-      (c) => c.iso_3166_1 === questionLocation.iso_3166_1,
+      (c) => c.iso_3166_1 === countryInQuestion.iso_3166_1,
     );
 
     if (countryData && map) {
@@ -93,16 +100,16 @@ function useGame() {
         essential: true,
       });
     }
-  }, [questionLocation, countries]);
+  }, [countryInQuestion, countries]);
 
   const checkAnswer = useCallback(
     (clickedCountry: string) => {
-      if (!questionLocation) {
+      if (!countryInQuestion) {
         console.error("No country selected");
         return;
       }
 
-      if (clickedCountry === questionLocation.iso_3166_1) {
+      if (clickedCountry === countryInQuestion.iso_3166_1) {
         toast({
           title: "Correct!",
           description: "You found the country!",
@@ -113,7 +120,7 @@ function useGame() {
           ...state,
           correctCountries: [
             ...state.correctCountries,
-            questionLocation.iso_3166_1,
+            countryInQuestion.iso_3166_1,
           ],
           attempts: 0,
         }));
@@ -144,7 +151,7 @@ function useGame() {
             ...state,
             errorCountries: [
               ...state.errorCountries,
-              questionLocation.iso_3166_1,
+              countryInQuestion.iso_3166_1,
             ],
             attempts: 0,
           }));
@@ -155,7 +162,7 @@ function useGame() {
       }
     },
     [
-      questionLocation,
+      countryInQuestion,
       gameState.attempts,
       gameState.maxAttempts,
       selectRandomCountry,
@@ -180,6 +187,8 @@ function useGame() {
     [checkAnswer, setGameState],
   );
 
+  const playedCountries = [...correctCountries, ...errorCountries];
+
   return {
     ...gameState,
     setAttempts: (attempts: number) =>
@@ -188,16 +197,18 @@ function useGame() {
     toggleGamePlay,
     startGame,
     endGame,
-    questionLocation,
+    countryInQuestion,
     shuffleQuestion,
     mapRef,
     getMapRef,
     setMapRef,
     onCountryClick,
-    playedLocations: playedCountries,
-    availableLocations: countrySet,
+    playedCountries,
+    availableLocations: getCountriesBySet(questionSet),
     lastClickedCountry,
     setLastClickedCountry,
+    selectRandomCountry,
+    checkAnswer,
   };
 }
 
