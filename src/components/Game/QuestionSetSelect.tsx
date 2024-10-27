@@ -27,7 +27,11 @@ function QuestionSetSelect() {
       }}
     >
       <SelectTrigger className="bg-slate-950 text-white sm:w-[280px]">
-        <SelectValue placeholder="Set" />
+        {questionSet === RegionSet.CUSTOM ? (
+          <SelectValue placeholder="Custom">~Custom~</SelectValue>
+        ) : (
+          <SelectValue placeholder="Set" />
+        )}
       </SelectTrigger>
       <SelectContent className="bg-slate-950 text-white">
         {regionOptions.map((region) => (
