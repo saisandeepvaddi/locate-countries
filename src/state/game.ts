@@ -1,3 +1,4 @@
+import { Country } from "@/lib/countries";
 import { atom } from "jotai";
 import { GeoJSONFeature } from "mapbox-gl";
 export type CountryProperties = GeoJSONFeature["properties"];
@@ -15,6 +16,7 @@ export enum RegionSet {
   AMERICAS = "AMERICAS",
   AFRICA = "AFRICA",
   OCEANIA = "OCEANIA",
+  CUSTOM = "CUSTOM",
 }
 
 export interface GameState {
@@ -23,17 +25,19 @@ export interface GameState {
   maxAttempts: number;
   showMarkerOnlyOnClick: boolean;
   countryInQuestion: CountryQuestion | null;
+  questionBank: Country[];
   correctCountries: string[];
   errorCountries: string[];
   questionSet: RegionSet;
 }
 
-const initialGameState: GameState = {
+export const initialGameState: GameState = {
   isPlaying: false,
   attempts: 0,
   maxAttempts: 1,
   showMarkerOnlyOnClick: true,
   countryInQuestion: null,
+  questionBank: [],
   correctCountries: [],
   errorCountries: [],
   questionSet: RegionSet.ALL,

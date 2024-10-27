@@ -1,24 +1,42 @@
+import { Button } from "@/components/ui/button";
 import { countries, Country } from "@/lib/countries";
-import { getCountriesBySet } from "@/lib/utils";
-import { CountryProperties, GameState, gameStateAtom } from "@/state/game";
+import { getCountriesBySet, getCountryByIso } from "@/lib/utils";
+import {
+  CountryProperties,
+  GameState,
+  gameStateAtom,
+  initialGameState,
+  RegionSet,
+} from "@/state/game";
 import { useAtom } from "jotai";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { LngLatLike, MapRef } from "react-map-gl";
 import { toast } from "./use-toast";
 
 function useGame() {
   const [gameState, setGameState] = useAtom(gameStateAtom);
-  const { questionSet, countryInQuestion, correctCountries, errorCountries } =
-    gameState;
+  const { countryInQuestion, correctCountries, errorCountries } = gameState;
 
   const playedCountries = [...correctCountries, ...errorCountries];
+
+  // useEffect(() => {
+  //   if (!gameState.isPlaying) {
+  //     return;
+  //   }
+  //   if (gameState.questionSet === RegionSet.CUSTOM) {
+  //     return;
+  //   }
+  //   console.log("Restarting with questionSet:", gameState.questionSet);
+  //   const questionBank = getCountriesBySet(gameState.questionSet);
+  //   replayWithFixedCountries(gameState.questionSet, questionBank);
+  // }, [gameState.questionSet]);
 
   const getRandomCountry = useCallback((state: GameState = gameState) => {
     const playedCountries = [
       ...state.correctCountries,
       ...state.errorCountries,
     ];
-    const availableCountries = getCountriesBySet(state.questionSet).filter(
+    const availableCountries = state.questionBank.filter(
       (country) => !playedCountries.includes(country.iso_3166_1),
     );
     const randomCountry =
@@ -43,14 +61,49 @@ function useGame() {
   const getMapRef = useCallback(() => mapRef.current, []);
 
   const resetGame = useCallback(() => {
-    setGameState((state) => ({
-      ...state,
-      attempts: 0,
-      correctCountries: [],
-      errorCountries: [],
-    }));
-    selectRandomCountry();
-  }, [selectRandomCountry, setGameState]);
+    const gameSet = gameState.questionSet;
+    const newState = { ...initialGameState };
+    newState.questionSet =
+      gameSet === RegionSet.CUSTOM ? RegionSet.ALL : gameSet;
+    newState.questionBank = getCountriesBySet(newState.questionSet);
+    newState.countryInQuestion = getRandomCountry(newState);
+    newState.isPlaying = true;
+    setGameState(newState);
+  }, [getRandomCountry, setGameState]);
+
+  const replayWithFixedCountries = useCallback(
+    (region: RegionSet, countries: string[] | Country[]) => {
+      if (countries.length === 0) {
+        toast({
+          title: "No countries selected",
+          description: "Please select at least one country",
+          variant: "destructive",
+        });
+        return;
+      }
+      const newState = { ...initialGameState };
+      newState.questionSet = region;
+      if (typeof countries[0] === "string") {
+        newState.questionBank = (countries as string[]).map((iso) =>
+          getCountryByIso(iso),
+        );
+      } else {
+        newState.questionBank = countries as Country[];
+      }
+      newState.countryInQuestion = getRandomCountry(newState);
+      newState.isPlaying = true;
+      setGameState(newState);
+    },
+    [getRandomCountry, setGameState],
+  );
+
+  const replayWithRegionSet = useCallback(
+    (region: RegionSet) => {
+      const countries = getCountriesBySet(region);
+      replayWithFixedCountries(region, countries);
+    },
+    [replayWithFixedCountries],
+  );
 
   const toggleGamePlay = () => {
     const willPlay = !gameState.isPlaying;
@@ -62,11 +115,6 @@ function useGame() {
       resetGame();
     }
   };
-
-  const countriesInSet = useMemo(
-    () => getCountriesBySet(questionSet),
-    [questionSet],
-  );
 
   const moveToCountry = useCallback(
     (country: Country) => {
@@ -143,9 +191,44 @@ function useGame() {
       }
       const isGameOver =
         nextState.correctCountries.length + nextState.errorCountries.length ===
-        countriesInSet.length;
-      nextState.isPlaying = !isGameOver;
-      setGameState(nextState);
+        nextState.questionBank.length;
+
+      if (isGameOver) {
+        nextState.isPlaying = false;
+        setGameState(nextState);
+        const { dismiss } = toast({
+          title: "Game Over!",
+          description: "You've played all the countries!",
+          variant: "default",
+          action: (
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={() => {
+                  resetGame();
+                  dismiss();
+                }}
+              >
+                Play Again
+              </Button>
+              {nextState.errorCountries.length > 0 && (
+                <Button
+                  onClick={() => {
+                    replayWithFixedCountries(
+                      RegionSet.CUSTOM,
+                      nextState.errorCountries,
+                    );
+                    dismiss();
+                  }}
+                >
+                  Replay with wrong choices
+                </Button>
+              )}
+            </div>
+          ),
+        });
+      } else {
+        setGameState(nextState);
+      }
     },
     [
       countryInQuestion,
@@ -171,6 +254,8 @@ function useGame() {
 
   return {
     ...gameState,
+    replayWithFixedCountries,
+    replayWithRegionSet,
     resetGame,
     toggleGamePlay,
     countryInQuestion,
@@ -179,7 +264,6 @@ function useGame() {
     setMapRef,
     onCountryClick,
     playedCountries,
-    availableLocations: getCountriesBySet(questionSet),
     lastClickedCountry,
     setLastClickedCountry,
   };

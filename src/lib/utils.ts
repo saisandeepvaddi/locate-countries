@@ -15,7 +15,7 @@ export function getCoords(country: Country) {
 }
 
 export const getCountriesBySet = memoize(
-  (set: RegionSet, maxCount?: number) => {
+  (set: RegionSet, maxCount: number = 3) => {
     const countryObjects = Object.values(countries);
 
     let filteredCountries = [];
