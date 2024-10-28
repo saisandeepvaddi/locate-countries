@@ -2,7 +2,7 @@
 import useGame from "@/hooks/useGame";
 import { MAX_FREE_LOADS } from "@/lib/constants";
 import { CountryPopupInfo } from "@/lib/types";
-import { getCountryByIso } from "@/lib/utils";
+import { getCountryByIso, getMaxZoomForCountry } from "@/lib/utils";
 import {
   lastUsedDateAtom,
   mapboxApiKeyAtom,
@@ -46,7 +46,7 @@ const initialViewState = {
 
 const mapContainerStyle = { width: "100vw", height: "100vh" };
 export function MapContainer() {
-  const { playedCountries, isPlaying } = useGame();
+  const { playedCountries, isPlaying, countryInQuestion } = useGame();
 
   const [lastHoveredCountryId, setHoveredCountryId] =
     useAtom(hoveredCountryIdAtom);
@@ -181,6 +181,11 @@ export function MapContainer() {
       onClick={handleClick}
       onLoad={handleMapLoad}
       projection={projection as unknown as ProjectionSpecification}
+      maxZoom={
+        countryInQuestion
+          ? getMaxZoomForCountry(countryInQuestion?.iso_3166_1)
+          : undefined
+      }
     >
       {popupInfo && (
         <CountryPopup

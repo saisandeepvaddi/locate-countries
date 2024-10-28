@@ -36,18 +36,40 @@ function useGame() {
       ...state.correctCountries,
       ...state.errorCountries,
     ];
-    const availableCountries = state.questionBank.filter(
-      (country) => !playedCountries.includes(country.iso_3166_1),
-    );
+
+    const availableCountries = state.questionBank.filter((country) => {
+      const isMacaoPlayed = playedCountries.includes("MO");
+      const isHongKongPlayed = playedCountries.includes("HK");
+      const isTaiwanPlayed = playedCountries.includes("TW");
+
+      // Mapbox selection for China includes macau, hong kong, and taiwan
+      // But, there's different bounding boxes for MO, HK, and TW as well
+      // So, if china played first, we'll be unable to click on MO, HK, or TW
+      // So allow china selection only if MO, HK, and TW have been played
+      if (country.iso_3166_1 === "CN") {
+        return isMacaoPlayed && isHongKongPlayed && isTaiwanPlayed;
+      }
+
+      return !playedCountries.includes(country.iso_3166_1);
+    });
+
+    // This commented code is here just to test china & its claimed provinces. Don't remove it yet.
+    // availableCountries = [
+    //   state.questionBank.find((c) => c.iso_3166_1 === "TW"),
+    //   state.questionBank.find((c) => c.iso_3166_1 === "MO"),
+    //   state.questionBank.find((c) => c.iso_3166_1 === "HK"),
+    //   state.questionBank.find((c) => c.iso_3166_1 === "IN"),
+    // ]
+    //   .filter(Boolean)
+    //   .filter(
+    //     (c) => !playedCountries.includes((c as Country).iso_3166_1),
+    //   ) as Country[];
+
     const randomCountry =
       availableCountries[Math.floor(Math.random() * availableCountries.length)];
+
     return randomCountry;
   }, []);
-
-  const selectRandomCountry = useCallback(() => {
-    const randomCountry = getRandomCountry(gameState);
-    setGameState((state) => ({ ...state, countryInQuestion: randomCountry }));
-  }, [setGameState]);
 
   const mapRef = useRef<MapRef>(null);
   const [lastClickedCountry, setLastClickedCountry] = useState<string | null>(
@@ -230,13 +252,7 @@ function useGame() {
         setGameState(nextState);
       }
     },
-    [
-      countryInQuestion,
-      gameState,
-      selectRandomCountry,
-      moveToCountry,
-      setGameState,
-    ],
+    [countryInQuestion, gameState, moveToCountry, setGameState],
   );
 
   const onCountryClick = useCallback(

@@ -51,3 +51,19 @@ export function prefersDarkMode() {
 export function getCountryByIso(iso: string) {
   return countries[iso];
 }
+
+// Some Chinese-claimed provinces are not able to be clicked on without some fixed zoom levels.
+// Without zooming to these max zoom levels, clicking on them will click on China instead.
+// For HK, going below zoom level 9 doesn't allow clicking
+// For MO, going below zoom level 8 doesn't allow clicking
+// For TW, going beyond zoom level 2 doesn't allow clicking
+export const customMaxZoomsForCountry: Record<string, number> = {
+  HK: 9,
+  MO: 8,
+  TW: 2,
+};
+
+export const getMaxZoomForCountry = (country: Country | string) => {
+  const iso = typeof country === "string" ? country : country.iso_3166_1;
+  return customMaxZoomsForCountry[iso] ?? undefined;
+};
