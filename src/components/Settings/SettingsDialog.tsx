@@ -16,18 +16,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Theme } from "@/lib/themes";
-import { themeAtom } from "@/state/settings";
+import { projectionAtom, themeAtom } from "@/state/settings";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useAtom } from "jotai";
-import { Laptop, Moon, Settings, Sun } from "lucide-react";
+import { Globe, Laptop, Map, Moon, Settings, Sun } from "lucide-react";
 import MapboxKeyInput from "./MapboxKeyInput";
 
 export default function SettingsDialog() {
   const [theme, setTheme] = useAtom(themeAtom);
+  const [projection, setProjection] = useAtom(projectionAtom);
 
   const handleThemeChange = (value: Theme) => {
     setTheme(value);
+  };
+
+  const handleProjectionChange = (value: "mercator" | "globe") => {
+    setProjection(value);
   };
 
   return (
@@ -42,6 +48,26 @@ export default function SettingsDialog() {
           <DialogTitle>Settings</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="projection" className="text-right">
+              Projection
+            </Label>
+            <Tabs
+              value={projection}
+              onValueChange={(value) =>
+                handleProjectionChange(value as "mercator" | "globe")
+              }
+            >
+              <TabsList>
+                <TabsTrigger value="mercator">
+                  <Map className="mr-2 h-4 w-4" /> Mercator
+                </TabsTrigger>
+                <TabsTrigger value="globe">
+                  <Globe className="mr-2 h-4 w-4" /> Globe
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="theme" className="text-right">
               Theme

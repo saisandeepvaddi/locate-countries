@@ -28,3 +28,8 @@ export const lastUsedDateAtom = atomWithStorage<Date>(
   "lastUsedDate",
   new Date(),
 );
+
+export const projectionAtom = atomWithStorage<"mercator" | "globe">(
+  "projection",
+  "mercator",
+);

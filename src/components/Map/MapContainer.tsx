@@ -7,9 +7,11 @@ import {
   lastUsedDateAtom,
   mapboxApiKeyAtom,
   pageLoadCountTodayAtom,
+  projectionAtom,
 } from "@/state/settings";
 import { useAtom, useAtomValue } from "jotai";
 import { useAtomCallback } from "jotai/utils";
+import { ProjectionSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useCallback, useState } from "react";
 import { Map, MapMouseEvent } from "react-map-gl";
@@ -47,6 +49,7 @@ export function MapContainer() {
   const [popupInfo, setPopupInfo] = useState<CountryPopupInfo | null>(null);
   const mapboxApiKey = useAtomValue(mapboxApiKeyAtom);
   const pageLoadCountToday = useAtomValue(pageLoadCountTodayAtom);
+  const projection = useAtomValue(projectionAtom);
 
   const onHover = useCallback(
     (event: MapMouseEvent) => {
@@ -172,6 +175,7 @@ export function MapContainer() {
       onMouseMove={onHover}
       onClick={handleClick}
       onLoad={handleMapLoad}
+      projection={projection as unknown as ProjectionSpecification}
     >
       {/* <ScaleControl />
       <NavigationControl position='bottom-right' /> */}
