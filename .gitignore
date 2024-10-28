@@ -31,3 +31,4 @@ dist-ssr
 *.key
 caddy_cache
 Caddyfile
+.env
