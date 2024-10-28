@@ -18,6 +18,7 @@ function CorrectLayer(): JSX.Element {
       filter={["in", ["get", "iso_3166_1"], ["literal", correctCountries]]}
       paint={{
         "fill-color": layerTheme.correct,
+        "fill-outline-color": layerTheme.border,
       }}
     />
   );

@@ -19,6 +19,7 @@ function IncorrectLayer(): JSX.Element {
       filter={["in", ["get", "iso_3166_1"], ["literal", errorCountries]]}
       paint={{
         "fill-color": layerTheme.error,
+        "fill-outline-color": layerTheme.border,
       }}
     />
   );
