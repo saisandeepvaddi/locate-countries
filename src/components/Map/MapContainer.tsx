@@ -14,7 +14,12 @@ import { useAtomCallback } from "jotai/utils";
 import { ProjectionSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useCallback, useState } from "react";
-import { Map, MapMouseEvent } from "react-map-gl";
+import {
+  Map,
+  MapMouseEvent,
+  NavigationControl,
+  ScaleControl,
+} from "react-map-gl";
 import { hoveredCountryIdAtom } from "../../state/game";
 import MapboxKeyInput from "../Settings/MapboxKeyInput";
 import {
@@ -177,8 +182,6 @@ export function MapContainer() {
       onLoad={handleMapLoad}
       projection={projection as unknown as ProjectionSpecification}
     >
-      {/* <ScaleControl />
-      <NavigationControl position='bottom-right' /> */}
       {popupInfo && (
         <CountryPopup
           popup={popupInfo}
@@ -187,6 +190,8 @@ export function MapContainer() {
           }}
         />
       )}
+      <ScaleControl />
+      <NavigationControl position="bottom-right" />
       <PlayedCountryMarkers countryISOs={playedCountries} />
       <CountryBoundariesLayer />
     </Map>
