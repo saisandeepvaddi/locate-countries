@@ -85,3 +85,12 @@
 canvas.mapboxgl-canvas {
   @apply bg-stone-900;
 }
+
+.mapboxgl-popup-tip,
+.mapboxgl-popup-content {
+  @apply dark:bg-black;
+}
+
+.mapboxgl-popup-close-button {
+  @apply px-2 py-1 hover:border-2 hover:dark:bg-slate-800 hover:dark:text-white;
+}
